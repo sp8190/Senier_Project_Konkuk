@@ -1,36 +1,28 @@
-import RPi.GPIO as GPIO  
-from time import sleep
-
-
-
-GPIO.setmode(GPIO.BOARD) 
-
-GPIO.setup(12, GPIO.OUT) 
-
-p = GPIO.PWM(12, 50)   
-
-p.start(0)            
-
-p.ChangeDutyCycle(3) 
-sleep(1)
-
-p.ChangeDutyCycle(12)
-sleep(1) 
-
-p.ChangeDutyCycle(7.5)
-sleep(1)
-
-
-
-while(1):
-
-  val = float(raw_input("input(3~7.5~12) = "))
-  
-  if val == -1: break
-
-  p.ChangeDutyCycle(val)
-  
-
-p.stop()                
-
-GPIO.cleanup()
+# -*- coding:utf-8 -*- #한글입력
+ 
+import RPi.GPIO as GPIO
+import time
+ 
+pin=18
+ 
+GPIO.setmode(GPIO.BCM)          #gpio 모드 세팅
+GPIO.setup(pin,GPIO.OUT)        #모터출력
+p=GPIO.PWM(pin,50)              #펄스폭변조 세팅 핀,주파수
+p.start(0)
+try:
+        while True:
+                p.ChangeDutyCycle(2.5)  #0도
+                print "0도"
+                time.sleep(0.5)
+                p.ChangeDutyCycle(6)    #90도
+                print "90도"
+                time.sleep(0.5)
+                p.ChangeDutyCycle(9.5)  #180도
+                print "180도"
+                time.sleep(0.5)
+except KeyboardInterrupt:               #ctrl+c 종료
+        p.stop()
+finally:
+        GPIO.cleanup()          #필수! 정삭적인 종료를 위해 필요
+ 
+ 
