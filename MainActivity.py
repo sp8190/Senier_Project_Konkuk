@@ -4,7 +4,7 @@ import numpy as np
 
 # 웹페이지 영상 받기
 OriginalVideo = "http://192.168.43.189:8091/?action=stream"
-VideoSignal = cv2.VideoCapture(OriginalVideo)
+VideoSignal = cv2.VideoCapture(OriginalVideo) # 웹캠을 쓰고 싶으면 cv2.VideoCapture(0)
 # YOLO 가중치 파일과 CFG 파일 로드
 YOLO_net = cv2.dnn.readNet("yolo_custom.weights","yolo_custom.cfg")
 
