@@ -8,7 +8,7 @@ try:
     while 1:
         print("current mouse position:",pyautogui.position())
         
-        # 0 - 1919
+        # 500 (0도) - 2500 (180도)
         value_x = (2419 - pyautogui.position().x) / 1.8
         value_y = pyautogui.position().y + 750
         
