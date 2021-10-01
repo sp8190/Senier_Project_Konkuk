@@ -16,12 +16,12 @@ $ gst-launch-1.0 --version
 
 # 2. 실행하기
 
-1. 쉘 스크립트 생성
+**쉘 스크립트 생성**
 ```
 $ nano gst_test.sh
 ```
 
-_gst_test.sh 파일 안에다가 입력_
+**gst_test.sh 파일 안에다가 입력**
 ```
 #!/bin/bash
 
@@ -29,7 +29,7 @@ MY_IP=$(hostname -I)
 echo "My IP Addr is $MY_IP"
 raspivid -t 0 -h 720 -w 1280 -fps 25 -hf -b 2000000 -o - | gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=$MY_IP port=5000
 ```
-_아래 명령어를 통해 gst_test 파일 속성 변경_
+**아래 명령어를 통해 gst_test 파일 속성 변경**
 ```
 $ chmod +x gst_test.sh
 ```
