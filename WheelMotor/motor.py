@@ -8,6 +8,8 @@ from time import sleep
 STOP  = 0
 FORWARD  = 1
 BACKWORD = 2
+LEFT = 3
+RIGHT = 4
 
 # 모터 채널
 CH1 = 0
@@ -49,6 +51,7 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
     #모터 속도 제어 PWM
     pwm.ChangeDutyCycle(speed)  
     
+    #앞으로
     if stat == FORWARD:
         GPIO.output(INA, HIGH)
         GPIO.output(INB, LOW)
@@ -57,6 +60,24 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
     elif stat == BACKWORD:
         GPIO.output(INA, LOW)
         GPIO.output(INB, HIGH)
+
+    #왼쪽으로
+    elif stat == LEFT:
+        if pwm == pwmA:
+            GPIO.output(INA, LOW)
+            GPIO.output(INB, HIGH)
+        else:
+            GPIO.output(INA, HIGH)
+            GPIO.output(INB, LOW)
+
+    #오른쪽으로
+    elif stat == RIGHT:
+        if pwm == pwmA:
+            GPIO.output(INA, HIGH)
+            GPIO.output(INB, LOW)
+        else:
+            GPIO.output(INA, LOW)
+            GPIO.output(INB, HIGH)
         
     #정지
     elif stat == STOP:
