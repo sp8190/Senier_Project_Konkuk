@@ -12,7 +12,7 @@ while True:
         command = raw_input('Enter your command: ')
         s.send(command)
         reply = s.recv(1024)
-        reply = str(reply,'utf-8')
-        if reply == 'Terminate':
+        end = bytes('Terminate','utf-8')
+        if reply == end:
                 break
         print (reply)
