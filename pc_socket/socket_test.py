@@ -1,7 +1,7 @@
 import socket
 
 # Server IP
-HOST = '172.17.30.14'
+HOST = '192.168.1.52'
 
 PORT = 5521
 
