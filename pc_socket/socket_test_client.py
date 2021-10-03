@@ -6,13 +6,13 @@ PORT = 5521
 # Pick an open Port (1000+ recommended), must match the server port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST,PORT))
-
+end = bytes('Terminate','utf-8')
 #Lets loop awaiting for your input
 while True:
         command = raw_input('Enter your command: ')
         s.send(command)
         reply = s.recv(1024)
-        end = bytes('Terminate','utf-8')
+        
         if reply == end:
                 break
         print (reply)
