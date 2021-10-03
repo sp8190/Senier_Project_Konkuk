@@ -1,4 +1,4 @@
 import os as os
 
-print os.system("ls -al")
-print os.system("ls -al | grep System* > ras_gstream")
+os.system("ls -al")
+os.system("ls -al | grep System* > ras_gstream")
