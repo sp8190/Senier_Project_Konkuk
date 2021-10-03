@@ -24,9 +24,11 @@ print ('Connected')
 # awaiting for message
 while True:
 	data = conn.recv(1024)
+	data = str(data, 'utf-8')
 	print ('I sent a message back in response to: ' + data)
+	
 	reply = ''
-
+	
 	# process your message
 	if data == 'Hello':
 		reply = 'Hi, back!'
@@ -34,11 +36,12 @@ while True:
 		reply = 'OK, I have done the important thing you have asked me!'
 	#and so on and on until...
 	elif data == 'quit':
-		conn.send('Terminating')
+		conn.send(bytes('Terminating','utf-8'))
 		break
 	else:
 		reply = 'Unknown command'
 
+	reply = bytes(reply, 'utf-8')
 	# Sending reply
 	conn.send(reply)
 
