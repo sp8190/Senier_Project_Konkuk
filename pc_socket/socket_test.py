@@ -37,7 +37,7 @@ while True:
 	#and so on and on until...
 	elif data == 'quit':
 		
-		conn.send(bytes('Terminating', encoding='utf8'))
+		conn.send(bytes('Terminating', encoding='utf-8'))
 		break
 	else:
 		reply = 'Unknown command'
