@@ -7,8 +7,8 @@ PORT = 5521
 # Pick an open Port (1000+ recommended), must match the server port
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#AF INET : 주소체계로 IPv4 인터넷 프로토콜
-#SOCK STREAM : TCP를 사용하기 위해 지정
+#AF INET 주소체계로 IPv4 인터넷 프로토콜
+#SOCK STREAM TCP를 사용하기 위해 지정
 client_socket.connect((HOST,PORT))
 
 for i in range(1,10):
