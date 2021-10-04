@@ -1,15 +1,6 @@
 import socket
 import threading
 
-# Server IP
-HOST = '192.168.1.52'
-
-PORT = 5521
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-print('Socket created')
-
 
 def binder(client_socket, addr):
 # 커넥션이 되면 접속 주소가 나온다.
