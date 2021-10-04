@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 
 # 라즈베리파이 GPIO 패키지
-from pynput import keyboard
+import os
+import pigpio
+import pyautogui
+import pynput.mouse    as ms
+import pynput.keyboard as kb
 import RPi.GPIO as GPIO
 from time import sleep
+
+os.system("sudo pigpiod") # pigpio on
+sleep(1)
+pi = pigpio.pi() # Connect to local Pi.
 
 # 모터 상태
 STOP  = 0
@@ -65,21 +73,20 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
     #왼쪽으로
     elif stat == LEFT:
         if pwm == pwmA:
-            GPIO.output(INA, LOW)
-            GPIO.output(INB, HIGH)
-        else:
             GPIO.output(INA, HIGH)
             GPIO.output(INB, LOW)
+        else:
+            GPIO.output(INA, LOW)
+            GPIO.output(INB, HIGH)
 
     #오른쪽으로
     elif stat == RIGHT:
         if pwm == pwmA:
-            GPIO.output(INA, HIGH)
-            GPIO.output(INB, LOW)
-        else:
-            print("pwmB")
             GPIO.output(INA, LOW)
             GPIO.output(INB, HIGH)
+        else:
+            GPIO.output(INA, HIGH)
+            GPIO.output(INB, LOW)
         
     #정지
     elif stat == STOP:
@@ -107,7 +114,6 @@ def on_press(key):
     print('Key %s pressed' % key)
     
     if str(key) == "'w'":
-        print(1)
         setMotor(CH1, 100, FORWARD)
         setMotor(CH2, 100, FORWARD)
         
@@ -131,31 +137,45 @@ def on_press(key):
 
 def on_release(key):
     print('Key %s released' %key)
-    if key == keyboard.Key.esc: #esc 키가 입력되면 종료
+    if key == kb.Key.esc: #esc 키가 입력되면 종료
         return False
     else:
         #정지 
         setMotor(CH1, 80, STOP)
         setMotor(CH2, 80, STOP)
         
- # 리스너 등록방법1
-with keyboard.Listener(
+def on_move(x,y):
+    # print('Position : x:%s, y:%s' %(x,y))
+    print("current mouse position:",pyautogui.position()) # 마우스 커서 x,y 좌표값 출력
+        
+    # 500 (0도) - 2500 (180도)
+    value_x = (2419 - pyautogui.position().x) / 1.8 # x축 움직임
+    value_y = pyautogui.position().y + 750 #y축 움직임
+    
+    if value_x < 500 : # 에러 방지
+        value_x = 500
+    
+    pi.set_servo_pulsewidth(14, value_x) # 라즈베리파이 14번에 연결되어있는 서보모터 동작
+    pi.set_servo_pulsewidth(15, value_y) # 라즈베리파이 15번에 연결되어있는 서보모터 동작
+    sleep(0.1)
+        
+# 리스너 등록
+with kb.Listener(
     on_press=on_press,
-    on_release=on_release) as listener:
-    listener.join()
-  
-
-
+    on_release=on_release) as kblistener,ms.Listener(on_move=on_move) as mslistener:
+    kblistener.join()
+    mslistener.join()
 
 
 
     
+# 서보모터 동작
 
-
-#정지 
-setMotor(CH1, 80, STOP)
-setMotor(CH2, 80, STOP)
-
+os.system("sudo killall pigpiod") # pigpio off
+pi.set_servo_pulsewidth(14, 0)
+pi.set_servo_pulsewidth(15, 0)
+pi.stop()
 # 종료
 GPIO.cleanup()
+
 
