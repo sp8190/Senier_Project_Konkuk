@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 import socket
 import threading
-# -*- coding: utf-8 -*-
+
 
 HOST = '192.168.1.52'
 # Enter IP or Hostname of your server
