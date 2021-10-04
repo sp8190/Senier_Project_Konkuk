@@ -160,22 +160,24 @@ def on_move(x,y):
     sleep(0.1)
         
 # 리스너 등록
-with kb.Listener(
-    on_press=on_press,
-    on_release=on_release) as kblistener,ms.Listener(on_move=on_move) as mslistener:
-    kblistener.join()
-    mslistener.join()
+try:
+    with kb.Listener(
+        on_press=on_press,
+        on_release=on_release) as kblistener,ms.Listener(on_move=on_move) as mslistener:
+        kblistener.join()
+        mslistener.join()
 
 
 
     
-# 서보모터 동작
+# 서보모터 종료
+except KeyboardInterrupt:
+    os.system("sudo killall pigpiod") # pigpio off
+    pi.set_servo_pulsewidth(14, 0)
+    pi.set_servo_pulsewidth(15, 0)
+    pi.stop()
+    # 종료
+    GPIO.cleanup()
 
-os.system("sudo killall pigpiod") # pigpio off
-pi.set_servo_pulsewidth(14, 0)
-pi.set_servo_pulsewidth(15, 0)
-pi.stop()
-# 종료
-GPIO.cleanup()
 
 
