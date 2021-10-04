@@ -1,6 +1,6 @@
 import socket
 import threading
-
+# -*- coding: utf-8 -*-
 
 def binder(client_socket, addr):
 # 커넥션이 되면 접속 주소가 나온다.
