@@ -1,0 +1,5 @@
+다음 GStreamer 명령을 사용하여 웹캠 보기를 tcp에 넣습니다.
+gst-launch-1.0 v4l2src ! videoconvert ! video/x-raw,width=640,height=480,framerate=20/1 !  jpegenc ! multipartmux ! tcpserversink host=127.0.0.1 port=5000 
+다음을 사용하여 GStreamer에서 볼 수 있습니다.
+
+gst-launch-1.0 tcpclientsrc  port=5000 host=127.0.0.1 !  multipartdemux   ! jpegdec  ! autovideosink
