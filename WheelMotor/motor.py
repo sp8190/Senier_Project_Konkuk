@@ -7,11 +7,14 @@ import pyautogui
 import pynput.mouse    as ms
 import pynput.keyboard as kb
 import RPi.GPIO as GPIO
-from time import sleep
+import time
+from multiprocessing import Process
 
 os.system("sudo pigpiod") # pigpio on
-sleep(1)
+os.system("raspivid -n -t 0 -h 720 -w 1280 -fps 25 -b 2000000 -o - |gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.137.219 port=5000")
+time.sleep(1)
 pi = pigpio.pi() # Connect to local Pi.
+wave_distance = 0
 
 # 모터 상태
 STOP  = 0
@@ -44,7 +47,12 @@ IN3 = 5   #31 pin
 IN4 = 6   #29 pin
 
 # 핀 설정 함수
-def setPinConfig(EN, INA, INB):        
+def setPinConfig(EN, INA, INB):
+    GPIO.setmode(GPIO.BCM)
+    # Yellow : Pin 18 : 24(Trig)
+    GPIO.setup(24, GPIO.OUT)
+    # White : Pin 16 : 23(Echo)
+    GPIO.setup(23, GPIO.IN)
     GPIO.setup(EN, GPIO.OUT)
     GPIO.setup(INA, GPIO.OUT)
     GPIO.setup(INB, GPIO.OUT)
@@ -157,13 +165,45 @@ def on_move(x,y):
     
     pi.set_servo_pulsewidth(14, value_x) # 라즈베리파이 14번에 연결되어있는 서보모터 동작
     pi.set_servo_pulsewidth(15, value_y) # 라즈베리파이 15번에 연결되어있는 서보모터 동작
-    sleep(0.1)
+    time.sleep(0.1)
+    
+def wavesensor(name='world'):
+    while True:
+        GPIO.output(24, False)
+        time.sleep(0.5)
+
+        GPIO.output(24, True)
+        time.sleep(0.00001)
+        GPIO.output(24, False)
+
+        # 18번이 OFF가 되는 시점을 시작시간으로 설정
+        while GPIO.input(23) == 0:
+            start = time.time()
+
+        # 18번이 ON이 되는 시점을 반사파 수신시간으로 설정
+        while GPIO.input(23) == 1:
+            stop = time.time()
+
+        # 초음파가 되돌아오는 시간차로 거리를 계산한다
+        time_interval = stop - start
+        distance = time_interval * 17000
+        distance = round(distance, 2)
+        wave_distance = distance
+
+        print("Distance => ", wave_distance, "cm")
+    
+
+p = Process(target=wavesensor)
+
         
 # 리스너 등록
 try:
     with kb.Listener(
         on_press=on_press,
-        on_release=on_release) as kblistener,ms.Listener(on_move=on_move) as mslistener:
+        on_release=on_release) as kblistener, \
+        ms.Listener(on_move=on_move) as mslistener:
+        p.start()
+        p.join()
         kblistener.join()
         mslistener.join()
 
@@ -176,6 +216,7 @@ except KeyboardInterrupt:
     pi.set_servo_pulsewidth(14, 0)
     pi.set_servo_pulsewidth(15, 0)
     pi.stop()
+    p.close()
     # 종료
     GPIO.cleanup()
 
