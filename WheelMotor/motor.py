@@ -8,13 +8,13 @@ import pynput.mouse    as ms
 import pynput.keyboard as kb
 import RPi.GPIO as GPIO
 import time
+import threading
 from multiprocessing import Process
 
 os.system("sudo pigpiod") # pigpio on
 os.system("raspivid -n -t 0 -h 720 -w 1280 -fps 25 -b 2000000 -o - |gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.137.219 port=5000")
 time.sleep(1)
 pi = pigpio.pi() # Connect to local Pi.
-wave_distance = 0
 
 # 모터 상태
 STOP  = 0
@@ -81,20 +81,20 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
     #왼쪽으로
     elif stat == LEFT:
         if pwm == pwmA:
-            GPIO.output(INA, HIGH)
-            GPIO.output(INB, LOW)
-        else:
             GPIO.output(INA, LOW)
             GPIO.output(INB, HIGH)
+        else:
+            GPIO.output(INA, HIGH)
+            GPIO.output(INB, LOW)
 
     #오른쪽으로
     elif stat == RIGHT:
         if pwm == pwmA:
-            GPIO.output(INA, LOW)
-            GPIO.output(INB, HIGH)
-        else:
             GPIO.output(INA, HIGH)
             GPIO.output(INB, LOW)
+        else:
+            GPIO.output(INA, LOW)
+            GPIO.output(INB, HIGH)
         
     #정지
     elif stat == STOP:
@@ -120,10 +120,12 @@ def setMotor(ch, speed, stat):
         setMotorContorl(pwmB, IN3, IN4, speed, stat)
 def on_press(key):
     print('Key %s pressed' % key)
+    print(wave_distance)
     
     if str(key) == "'w'":
-        setMotor(CH1, 100, FORWARD)
-        setMotor(CH2, 100, FORWARD)
+        if wave_distance > 10:
+            setMotor(CH1, 100, FORWARD)
+            setMotor(CH2, 100, FORWARD)
         
     elif str(key) == "'s'":
         setMotor(CH1, 100, BACKWORD)
@@ -167,8 +169,9 @@ def on_move(x,y):
     pi.set_servo_pulsewidth(15, value_y) # 라즈베리파이 15번에 연결되어있는 서보모터 동작
     time.sleep(0.1)
     
-def wavesensor(name='world'):
+def wavesensor():
     while True:
+        global wave_distance
         GPIO.output(24, False)
         time.sleep(0.5)
 
@@ -193,7 +196,7 @@ def wavesensor(name='world'):
         print("Distance => ", wave_distance, "cm")
     
 
-p = Process(target=wavesensor)
+t = threading.Thread(target=wavesensor)
 
         
 # 리스너 등록
@@ -202,8 +205,7 @@ try:
         on_press=on_press,
         on_release=on_release) as kblistener, \
         ms.Listener(on_move=on_move) as mslistener:
-        p.start()
-        p.join()
+        t.start()
         kblistener.join()
         mslistener.join()
 
@@ -216,7 +218,7 @@ except KeyboardInterrupt:
     pi.set_servo_pulsewidth(14, 0)
     pi.set_servo_pulsewidth(15, 0)
     pi.stop()
-    p.close()
+    t.close()
     # 종료
     GPIO.cleanup()
 
