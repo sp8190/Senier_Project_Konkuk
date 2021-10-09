@@ -9,7 +9,6 @@ import pynput.keyboard as kb
 import RPi.GPIO as GPIO
 import time
 import threading
-from multiprocessing import Process
 import socket
 
 os.system("sudo pigpiod") # pigpio on
@@ -50,10 +49,6 @@ IN4 = 6   #29 pin
 # 핀 설정 함수
 def setPinConfig(EN, INA, INB):
     GPIO.setmode(GPIO.BCM)
-    # Yellow : Pin 18 : 24(Trig)
-    GPIO.setup(24, GPIO.OUT)
-    # White : Pin 16 : 23(Echo)
-    GPIO.setup(23, GPIO.IN)
     GPIO.setup(EN, GPIO.OUT)
     GPIO.setup(INA, GPIO.OUT)
     GPIO.setup(INB, GPIO.OUT)
@@ -102,9 +97,6 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
         GPIO.output(INA, LOW)
         GPIO.output(INB, LOW)
         
-        
-# GPIO 모드 설정 
-GPIO.setmode(GPIO.BCM)
       
 #모터 핀 설정
 #핀 설정후 PWM 핸들 얻어옴 
@@ -158,7 +150,7 @@ def on_release(key):
         
 def on_move(x,y):
     # print('Position : x:%s, y:%s' %(x,y))
-    print("current mouse position:",pyautogui.position()) # 마우스 커서 x,y 좌표값 출력
+    #print("current mouse position:",pyautogui.position()) # 마우스 커서 x,y 좌표값 출력
         
     # 500 (0도) - 2500 (180도)
     value_x = (2419 - pyautogui.position().x) / 1.8 # x축 움직임
@@ -172,8 +164,19 @@ def on_move(x,y):
     time.sleep(0.1)
     
 def wavesensor():
+    # Yellow : Pin 18 : 24(Trig)
+    GPIO.setup(24, GPIO.OUT)
+    # White : Pin 16 : 23(Echo)
+    GPIO.setup(23, GPIO.IN)
+    
+    global wave_distance
+    global stop_thread
+    stop_thread = False
+    
     while True:
-        global wave_distance
+        if stop_thread == True:
+            break
+        
         GPIO.output(24, False)
         time.sleep(0.5)
 
@@ -196,6 +199,9 @@ def wavesensor():
         wave_distance = distance
 
         print("Distance => ", wave_distance, "cm")
+        
+
+        
     
 
 def server_bind():
@@ -230,24 +236,35 @@ def server_bind():
 
     while True:
 
-	    #클라이언트 보낸 메시지를 수신하기 위해 대기합니다.
-	    user_command = client_socket.recv(1024)
-	
-	    #빈 문자열을 수신하면 루프를 중지합니다.
-	    if data == 'break':
-		    break
+        #클라이언트 보낸 메시지를 수신하기 위해 대기합니다.
+        user_command = client_socket.recv(1024)
+        
+        #빈 문자열을 수신하면 루프를 중지합니다.
+        if user_command.decode() == 'break':
 
-	    #수신받은 문자열을 출력합니다.
-	    print("Received from ", addr, data.decode())
-        user_command = data.decode()
+            break
+        
+        #수신받은 문자열을 출력합니다.
+        print("Received from ", addr, user_command.decode())
+
+        reply = "Received " + user_command.decode()
+        client_socket.sendall(reply.encode())
+            
+        if stop_thread == True:
+            break
+        
 
     #소켓을 닫습니다.
     client_socket.close()
     server_socket.close()
 
+
         
 t_wavesensor = threading.Thread(target=wavesensor)
 t_socket = threading.Thread(target=server_bind)
+
+# t_wavesensor.start()
+# t_socket.start()
 
 # 리스너 등록
 try:
@@ -267,13 +284,10 @@ try:
 # 서보모터 종료
 except KeyboardInterrupt:
     os.system("sudo killall pigpiod") # pigpio off
-    pi.set_servo_pulsewidth(14, 0)
-    pi.set_servo_pulsewidth(15, 0)
+    stop_thread = True
     pi.stop()
-    t_wavesensor.close()
-    t_socket.close()
     # 종료
-    GPIO.cleanup()
+    #GPIO.cleanup()
 
 
 
