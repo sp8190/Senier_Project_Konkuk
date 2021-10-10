@@ -235,13 +235,53 @@ def server_bind():
 
 
     while True:
+        if stop_thread == True: # 스레드가 멈추면 빠져나오기
+            break
+
+        # wasdq 입력 받을시 행동
+        if user_command.decode() == "w":
+            if wave_distance > 10: # 앞 객체간 거리가 10 이상일 때만 움직임
+                setMotor(CH1, 100, FORWARD)
+                setMotor(CH2, 100, FORWARD)
+                time.sleep(1)
+
+                setMotor(CH1, 80, STOP)
+                setMotor(CH2, 80, STOP)
+            
+        elif user_command.decode() == "s":
+            setMotor(CH1, 100, BACKWORD)
+            setMotor(CH2, 100, BACKWORD)
+            time.sleep(1)
+
+            setMotor(CH1, 80, STOP)
+            setMotor(CH2, 80, STOP)
+            
+        elif user_command.decode() == "a":
+            setMotor(CH1, 100, LEFT)
+            setMotor(CH2, 100, LEFT)
+            time.sleep(1)
+
+            setMotor(CH1, 80, STOP)
+            setMotor(CH2, 80, STOP)
+            
+        elif user_command.decode() == "d":
+            setMotor(CH1, 100, RIGHT)
+            setMotor(CH2, 100, RIGHT)
+            time.sleep(1)
+
+            setMotor(CH1, 80, STOP)
+            setMotor(CH2, 80, STOP)
+            
+        elif user_command.decode() == "q":
+            #정지 
+            setMotor(CH1, 80, STOP)
+            setMotor(CH2, 80, STOP)
 
         #클라이언트 보낸 메시지를 수신하기 위해 대기합니다.
         user_command = client_socket.recv(1024)
         
         #빈 문자열을 수신하면 루프를 중지합니다.
         if user_command.decode() == 'break':
-
             break
         
         #수신받은 문자열을 출력합니다.
@@ -250,8 +290,7 @@ def server_bind():
         reply = "Received " + user_command.decode()
         client_socket.sendall(reply.encode())
             
-        if stop_thread == True:
-            break
+        
         
 
     #소켓을 닫습니다.
@@ -268,14 +307,16 @@ t_socket = threading.Thread(target=server_bind)
 
 # 리스너 등록
 try:
-    with kb.Listener(
-        on_press=on_press,
-        on_release=on_release) as kblistener, \
-        ms.Listener(on_move=on_move) as mslistener:
-        t_wavesensor.start()
-        t_socket.start()
-        kblistener.join()
-        mslistener.join()
+    # with kb.Listener(
+    #     on_press=on_press,
+    #     on_release=on_release) as kblistener, \
+    #     ms.Listener(on_move=on_move) as mslistener:
+    #     t_wavesensor.start()
+    #     t_socket.start()
+    #     kblistener.join()
+    #     mslistener.join()
+    t_wavesensor.start()
+    t_socket.start()
         
 
 
