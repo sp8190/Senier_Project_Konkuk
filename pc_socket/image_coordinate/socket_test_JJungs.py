@@ -8,7 +8,6 @@ import socket
 import threading
 
 os.system("sudo pigpiod") # pigpio on
-os.system("raspivid -n -t 0 -h 720 -w 1280 -fps 25 -b 2000000 -o - |gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.1.165 port=5000")
 time.sleep(1)
 pi = pigpio.pi() # Connect to local Pi.
 
@@ -231,14 +230,19 @@ def server_bind():
     #소켓을 닫습니다.
     client_socket.close()
     server_socket.close()
+    
+def streaming():
+    os.system("raspivid -n -t 0 -h 720 -w 1280 -fps 25 -b 2000000 -o - |gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.1.165 port=5000")
 
-
+    
 t_wavesensor = threading.Thread(target=wavesensor)
 t_socket = threading.Thread(target=server_bind)
+t_streamer = threading.Thread(target=streaming)
 
 try:
     t_wavesensor.start()
     t_socket.start()
+    t_streamer.start()
 
 # 서보모터 종료
 except KeyboardInterrupt:
