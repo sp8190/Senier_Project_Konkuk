@@ -3,7 +3,7 @@ import socket
 import threading
 
 
-HOST = '192.168.1.52'
+HOST = '192.168.1.165'
 # Enter IP or Hostname of your server
 PORT = 5521
 # Pick an open Port (1000+ recommended), must match the server port

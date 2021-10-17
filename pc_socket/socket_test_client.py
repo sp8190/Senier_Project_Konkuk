@@ -3,7 +3,7 @@ import socket
 import threading
 
 
-HOST = '192.168.1.41'
+HOST = '192.168.1.165'
 # 서버 주소, 라즈베리파이 IP 입력
 PORT = 5521
 # 클라이언트 접속 대기 포트 번호
