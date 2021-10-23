@@ -38,8 +38,8 @@ ENB = 0   #27 pin
 #GPIO PIN
 IN1 = 13  #37 pin
 IN2 = 19  #35 pin
-IN3 = 6   #31 pin
-IN4 = 5   #29 pin
+IN3 = 5   #31 pin
+IN4 = 6   #29 pin
 
 # 핀 설정 함수
 def setPinConfig(EN, INA, INB):
@@ -145,7 +145,7 @@ def wavesensor():
         
 def server_bind():
 
-    HOST = '192.168.1.133'
+    HOST = '192.168.1.165'
     # 서버 주소, 라즈베리파이 IP 입력
     PORT = 5521
     # 클라이언트 접속 대기 포트 번호
@@ -232,7 +232,7 @@ def server_bind():
     server_socket.close()
     
 def streaming():
-    os.system("raspivid -n -t 0 -h 720 -w 1280 -fps 25 -b 2000000 -o - |gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.1.133 port=5000")
+    os.system("raspivid -n -t 0 -h 720 -w 1280 -fps 25 -b 2000000 -o - |gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=192.168.1.165 port=5000")
 
     
 t_wavesensor = threading.Thread(target=wavesensor)
