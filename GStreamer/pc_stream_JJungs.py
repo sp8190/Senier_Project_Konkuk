@@ -19,21 +19,20 @@ def mouse_callback(event, x, y, flags, param):
         queue.put(my_str)
     
 def opencv_img():
-    
-    img = cv2.imread("C:/Users/JJungs/Documents/GitHub/Senior_Project_Konkuk/pc_socket/image_coordinate/image.jpg")
-    cv2.namedWindow('image')  #마우스 이벤트 영역 윈도우 생성
-    cv2.setMouseCallback('image', mouse_callback)
+
+    cap = cv2.VideoCapture("gst-launch-1.0 -v tcpclientsrc host=192.168.1.165 port=5000 ! gdpdepay ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false",cv2.CAP_GSTREAMER)
+    cv2.namedWindow('frame_color')  #마우스 이벤트 영역 윈도우 생성
+    cv2.setMouseCallback('frame_color', mouse_callback)
 
     while(True):
+        ret, frame = cap.read()    # Read 결과와 frame
 
-        cv2.imshow('image', img)
+        if(ret) :
 
-        k = cv2.waitKey(1) & 0xFF
-        if k == 27:    # ESC 키 눌러졌을 경우 종료
-            print("ESC 키 눌러짐")
-            my_str = "break"
-            queue.put(my_str)
-            break
+            cv2.imshow('frame_color', frame)    # 컬러 화면 출력
+            if cv2.waitKey(1) == ord('q'):
+                break
+    cap.release()
     cv2.destroyAllWindows()
 
 
