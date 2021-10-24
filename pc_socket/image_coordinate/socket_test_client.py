@@ -20,7 +20,7 @@ def mouse_callback(event, x, y, flags, param):
     
 def opencv_img():
     
-    img = cv2.imread("C:/Users/JJungs/Documents/GitHub/Senior_Project_Konkuk/pc_socket/image_coordinate/image.jpg")
+    img = cv2.imread("C:/Users/Park/Desktop/picture1.jpg")
     cv2.namedWindow('image')  #마우스 이벤트 영역 윈도우 생성
     cv2.setMouseCallback('image', mouse_callback)
 
