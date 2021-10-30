@@ -16,14 +16,14 @@ confThreshold_1 = 0.5
 confThreshold_2 = 0.7
 nmsThreshold = 0.3
 
-classesFile = 'C:\senior_project\Senior_Project_Konkuk\AR\coco.names'
+classesFile = 'coco.names'
 
 with open(classesFile, 'rt') as f:
         classNames = f.read().split('\n')
 
 #모델 불러오기
-model_config = 'C:\senior_project\Senior_Project_Konkuk\AR\yolov3-tiny.cfg'
-model_weights = 'C:\senior_project\Senior_Project_Konkuk\AR\yolov3-tiny.weights'
+model_config = 'yolov3-tiny.cfg'
+model_weights = 'yolov3-tiny.weights'
 
 net = cv2.dnn.readNetFromDarknet(model_config, model_weights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
