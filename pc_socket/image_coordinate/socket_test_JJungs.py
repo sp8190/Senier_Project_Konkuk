@@ -216,8 +216,6 @@ def server_bind():
         #수신받은 문자열을 출력합니다.
         print("Received from ", addr, data.decode())
 
-        #받은 문자열을 사디 클라리언트로 (에코)
-        client_socket.sendall(data)
 
     #소켓을 닫습니다.
     client_socket.close()

@@ -12,7 +12,7 @@ from queue import Queue
 queue = Queue() #쓰레드간 작업 공유, 서버와 opencv 쓰레드 간의 데이터 공유
 dis_queue = Queue() # 거리 계산 쓰레드와 opencv 쓰레드 사이 대기 큐
 s_queue = Queue() # 거리 계산 쓰레드와 서버 쓰레드 사이의 데이터 공유
-value_queue = Queue() # 거리 계산 시 필요한 x,y 픽셀값 공유
+# value_queue = Queue() # 거리 계산 시 필요한 x,y 픽셀값 공유
 
 def mouse_callback(event, x, y, flags, param): 
     
@@ -20,9 +20,10 @@ def mouse_callback(event, x, y, flags, param):
         
         my_str = str(x)+"/"+str(y)
         print(my_str) # 이벤트 발생한 마우스 위치 출력
+        queue.put(my_str)
         dis_queue.put("opencv")
-        value_queue.put(x)
-        value_queue.put(y)
+        dis_queue.put(x)
+        dis_queue.put(y)
 
 def opencv_img():
     
@@ -57,8 +58,8 @@ def calculate_distance():
             degree = disqueue.get()
 
         if case == "opencv": # 1550 기준
-            x = value_queue.get()
-            y = value_queue.get()
+            x = dis_queue.get()
+            y = dis_queue.get()
             if y <= 720 and y > 400: # y축 기준으로 나누기
                 if 0 <= x and x < 400:
                     s_queue.put("L") # 좌로 움직이기
@@ -154,6 +155,8 @@ def calculate_distance():
                     s_queue.put(120) # 앞으로 40cm
 
             else: # 땅이 아닌 부분
+                print("땅이 아닙니다.")
+
 def client_send():
     HOST = '192.168.1.165'
     # 서버 주소, 라즈베리파이 IP 입력
@@ -181,12 +184,15 @@ def client_send():
 
         #메시지를 전송합니다 거리 계산에서 나온 거리 값
         direction =s_queue.get() # 방향전달
+        
 
         go_w =s_queue.get() # 가로로 얼마 갈지 전달
-        
+      
+
         temp =s_queue.get()# 앞으로 얼마갈지 전달
         go_h = int(temp)
         
+
         go = direction + "/" + str(go_w) + "/" + str(go_h)
         print(go)
         client_socket.sendall(str(go).encode())
@@ -195,7 +201,7 @@ def client_send():
 
         data = client_socket.recv(1024)
         print("Received ", repr(data.decode()))
-        # qkdkran https://shoark7.github.io/programming/python/difference-between-__repr__-vs-__str__
+        # https://shoark7.github.io/programming/python/difference-between-__repr__-vs-__str__
 
         
             
@@ -204,12 +210,15 @@ def client_send():
 #쓰레드 열기
 t_socket = threading.Thread(target=client_send)
 t_imgShow = threading.Thread(target=opencv_img)
+t_distance = threading.Thread(target=calculate_distance)
 t_socket.start()
 t_imgShow.start()
+t_distance.start()
 
 k = cv2.waitKey(1) & 0xFF
 if k == 27:    # ESC 키 눌러졌을 경우 종료
     print("ESC 키 눌러짐")
     t_socket.close()
     t_imgShow.close()
+    t_distance.close()
 
