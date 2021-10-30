@@ -199,7 +199,7 @@ def server_bind():
             setMotor(CH2, 80, STOP)
 
         # Y 좌표는 얼마만큼 움직일지 결정
-        if str_list[2] > 60: 
+        if int(str_list[2]) > 60: 
             if wave_distance > 10: # 앞 객체간 거리가 10 이상일 때만 움직임
                 setMotor(CH1, 100, FORWARD)
                 setMotor(CH2, 100, FORWARD)
