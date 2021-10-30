@@ -14,7 +14,13 @@ queue = Queue() #쓰레드간 작업 공유
 def mouse_callback(event, x, y, flags, param): 
     
     if event == cv2.EVENT_LBUTTONDOWN:
-        my_str = "x: "+str(x)+" y: "+str(y)+" 입니다"
+        if x < 580:
+            my_str = "L/"
+        elif x > 700:
+            my_str = "R/"
+        else:
+            my_str = "C/"
+        my_str = my_str +str(x)+"/"+str(y)
         print(my_str) # 이벤트 발생한 마우스 위치 출력
         queue.put(my_str)
     

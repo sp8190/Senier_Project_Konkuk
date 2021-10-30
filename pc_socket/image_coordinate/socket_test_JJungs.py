@@ -172,14 +172,34 @@ def server_bind():
 
 
     while True:
+
         if stop_thread == True: # 스레드가 멈추면 빠져나오기
             break
 
         #클라이언트 보낸 메시지를 수신하기 위해 대기합니다.
         data = client_socket.recv(1024)
 
-        # wasdq 입력 받을시 행동
-        if data.decode() != "" :
+        str_list = data.decode().split("/")
+
+        # 왼쪽일지 오른쪽일지 결정
+        # X 좌표는 얼마만큼 돌지 결정
+        if str_list[0] == "L":
+            setMotor(CH1, 100, LEFT)
+            setMotor(CH2, 100, LEFT)
+            time.sleep(1)
+
+            setMotor(CH1, 80, STOP)
+            setMotor(CH2, 80, STOP)
+        elif str_list[0] == "R":
+            setMotor(CH1, 100, RIGHT)
+            setMotor(CH2, 100, RIGHT)
+            time.sleep(1)
+
+            setMotor(CH1, 80, STOP)
+            setMotor(CH2, 80, STOP)
+
+        # Y 좌표는 얼마만큼 움직일지 결정
+        if str_list[2] > 60: 
             if wave_distance > 10: # 앞 객체간 거리가 10 이상일 때만 움직임
                 setMotor(CH1, 100, FORWARD)
                 setMotor(CH2, 100, FORWARD)
@@ -187,40 +207,12 @@ def server_bind():
 
                 setMotor(CH1, 80, STOP)
                 setMotor(CH2, 80, STOP)
-            
-        # elif data.decode() == "s":
-        #     setMotor(CH1, 100, BACKWORD)
-        #     setMotor(CH2, 100, BACKWORD)
-        #     time.sleep(1)
-
-        #     setMotor(CH1, 80, STOP)
-        #     setMotor(CH2, 80, STOP)
-            
-        # elif data.decode() == "a":
-        #     setMotor(CH1, 100, LEFT)
-        #     setMotor(CH2, 100, LEFT)
-        #     time.sleep(1)
-
-        #     setMotor(CH1, 80, STOP)
-        #     setMotor(CH2, 80, STOP)
-            
-        # elif data.decode() == "d":
-        #     setMotor(CH1, 100, RIGHT)
-        #     setMotor(CH2, 100, RIGHT)
-        #     time.sleep(1)
-
-        #     setMotor(CH1, 80, STOP)
-        #     setMotor(CH2, 80, STOP)
-            
-        # elif data.decode() == "q":
-        #     #정지 
-        #     setMotor(CH1, 80, STOP)
-        #     setMotor(CH2, 80, STOP)
-        
+                
         #빈 문자열을 수신하면 루프를 중지합니다.
         if not data:
             break
 
+        # data.decode() type = str
         #수신받은 문자열을 출력합니다.
         print("Received from ", addr, data.decode())
 
