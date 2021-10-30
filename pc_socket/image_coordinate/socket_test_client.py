@@ -9,24 +9,35 @@ import cv2 as cv2
 import math
 from queue import Queue
 
-queue = Queue() #쓰레드간 작업 공유
+queue = Queue() #쓰레드간 작업 공유, 서버와 opencv 쓰레드 간의 데이터 공유
+dis_queue = Queue() # 거리 계산 쓰레드와 opencv 쓰레드 사이의 데이터 공유
+s_queue = Queue() # 거리 계산 쓰레드와 서버 쓰레드 사이의 데이터 공유
 
 def mouse_callback(event, x, y, flags, param): 
     
     if event == cv2.EVENT_LBUTTONDOWN:
-        my_str = "x: "+str(x)+" y: "+str(y)+" 입니다"
+        if x < 580:
+            my_str = "L/"
+        elif x > 700:
+            my_str = "R/"
+        else:
+            my_str = "C/"
+        my_str = my_str +str(x)+"/"+str(y)
         print(my_str) # 이벤트 발생한 마우스 위치 출력
         queue.put(my_str)
     
 def opencv_img():
     
-    img = cv2.imread("C:/Users/JJungs/Documents/GitHub/Senior_Project_Konkuk/pc_socket/image_coordinate/image.jpg")
+    url = 'rtsp://192.168.1.165:8554/test'
+    cap = cv2.VideoCapture(url)
     cv2.namedWindow('image')  #마우스 이벤트 영역 윈도우 생성
     cv2.setMouseCallback('image', mouse_callback)
 
     while(True):
-
-        cv2.imshow('image', img)
+        ret, frame = cap.read()    # Read 결과와 frame
+        
+        if(ret) :
+            cv2.imshow('image', frame)    # 컬러 화면 출력
 
         k = cv2.waitKey(1) & 0xFF
         if k == 27:    # ESC 키 눌러졌을 경우 종료
@@ -34,6 +45,7 @@ def opencv_img():
             my_str = "break"
             queue.put(my_str)
             break
+    cap.release()
     cv2.destroyAllWindows()
 
 
