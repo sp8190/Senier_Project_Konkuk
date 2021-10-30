@@ -183,30 +183,31 @@ def server_bind():
 
         # 왼쪽일지 오른쪽일지 결정
         # X 좌표는 얼마만큼 돌지 결정
-        if str_list[0] == "L":
-            setMotor(CH1, 100, LEFT)
-            setMotor(CH2, 100, LEFT)
-            time.sleep(1)
-
-            setMotor(CH1, 80, STOP)
-            setMotor(CH2, 80, STOP)
-        elif str_list[0] == "R":
-            setMotor(CH1, 100, RIGHT)
-            setMotor(CH2, 100, RIGHT)
-            time.sleep(1)
-
-            setMotor(CH1, 80, STOP)
-            setMotor(CH2, 80, STOP)
-
-        # Y 좌표는 얼마만큼 움직일지 결정
-        if int(str_list[2]) > 60: 
-            if wave_distance > 10: # 앞 객체간 거리가 10 이상일 때만 움직임
-                setMotor(CH1, 100, FORWARD)
-                setMotor(CH2, 100, FORWARD)
+        if len(str_list) == 3:
+            if str_list[0] == "L":
+                setMotor(CH1, 100, LEFT)
+                setMotor(CH2, 100, LEFT)
                 time.sleep(1)
 
                 setMotor(CH1, 80, STOP)
                 setMotor(CH2, 80, STOP)
+            elif str_list[0] == "R":
+                setMotor(CH1, 100, RIGHT)
+                setMotor(CH2, 100, RIGHT)
+                time.sleep(1)
+
+                setMotor(CH1, 80, STOP)
+                setMotor(CH2, 80, STOP)
+
+            # Y 좌표는 얼마만큼 움직일지 결정
+            if int(str_list[2]) > 60: 
+                if wave_distance > 10: # 앞 객체간 거리가 10 이상일 때만 움직임
+                    setMotor(CH1, 100, FORWARD)
+                    setMotor(CH2, 100, FORWARD)
+                    time.sleep(1)
+
+                    setMotor(CH1, 80, STOP)
+                    setMotor(CH2, 80, STOP)
                 
         #빈 문자열을 수신하면 루프를 중지합니다.
         if not data:
