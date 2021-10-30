@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[3]:
+# In[48]:
 
 
 
@@ -13,10 +13,16 @@ VideoSignal = cv2.VideoCapture(0)
 # YOLO 가중치 파일과 CFG 파일 로드
 YOLO_net = cv2.dnn.readNet("yolov3.weights","yolov3.cfg")
 
-img = cv2.imread("user.jpg")
-img = cv2.resize(img, None, fx=0.1, fy=0.1)
+
 #roi = img[100:600, 200:400]
 #width, height, channel = img.shape
+
+logo = cv2.imread('user.jpg')
+size = 100
+logo = cv2.resize(logo, (size, size))
+
+img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
+ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
 
 # YOLO NETWORK 재구성
 classes = []
@@ -78,14 +84,25 @@ while True:
             #라벨 입력(정보 입력)
             if label == 'person':
                  cv2.putText(frame, "Konkuk Stu.", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
-            (0, 0, 0), 1)
+                    (0, 0, 0), 1)
                  
-            elif label == 'refrigerator':
-                 cv2.putText(frame, "store food", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
-            (0, 0, 0), 1)
-            else:
-                cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
-            
+                 if ret:
+                # Flip the frame
+                    frame = cv2.flip(frame, 1)
+
+                # Region of Image (ROI), where we want to insert logo
+                    roi = frame[-size-10:-10, -size-10:-10]
+                    #roi = frame[x+w-100:x+w,y+15:y]
+                # Set an index of where the mask is
+                    roi[np.where(mask)] = 0
+                    roi += logo
+                    frame=cv2.flip(frame,1)
+                 elif label == 'refrigerator':
+                    cv2.putText(frame, "store food", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
+                            (0, 0, 0), 1)
+                 else:
+                    cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
+
 
 
     cv2.imshow("YOLOv3", frame)
