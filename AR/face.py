@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[48]:
+# In[43]:
 
 
 
@@ -11,14 +11,15 @@ import numpy as np
 # 웹캠 신호 받기
 VideoSignal = cv2.VideoCapture(0)
 # YOLO 가중치 파일과 CFG 파일 로드
-YOLO_net = cv2.dnn.readNet("yolov3.weights","yolov3.cfg")
+YOLO_net = cv2.dnn.readNet("yolov3-tiny.weights","yolov3-tiny.cfg")
 
 
 #roi = img[100:600, 200:400]
 #width, height, channel = img.shape
 
+#각 사물에 해당하는 이미지(AR) 불러오기
 logo = cv2.imread('user.jpg')
-size = 100
+size = 20
 logo = cv2.resize(logo, (size, size))
 
 img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
@@ -86,22 +87,29 @@ while True:
                  cv2.putText(frame, "Konkuk Stu.", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
                     (0, 0, 0), 1)
                  
+                #특정 위치에 이미지 불러오기
                  if ret:
                 # Flip the frame
                     frame = cv2.flip(frame, 1)
 
                 # Region of Image (ROI), where we want to insert logo
-                    roi = frame[-size-10:-10, -size-10:-10]
-                    #roi = frame[x+w-100:x+w,y+15:y]
+                    #roi = frame[-size-10:-10, -size-10:-10]
+                    #roi = frame[-size-10:-10, -size-10:-10]
+                    #roi = frame[-60:-10,-60:-10]
+                    
+                    #성공한 예시
+                    #roi = frame[x-90:x-80,y+5:y+15] 
+                    roi = frame[y+15:y+35,x+w-480:x+w-460]
+                   
                 # Set an index of where the mask is
                     roi[np.where(mask)] = 0
                     roi += logo
                     frame=cv2.flip(frame,1)
-                 elif label == 'refrigerator':
-                    cv2.putText(frame, "store food", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
+            elif label == 'refrigerator':
+                cv2.putText(frame, "store food", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
                             (0, 0, 0), 1)
-                 else:
-                    cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
+            else:
+                cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
 
 
 
