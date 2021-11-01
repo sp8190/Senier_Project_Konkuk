@@ -8,6 +8,7 @@ from datetime import datetime
 import cv2 as cv2
 import math
 from queue import Queue
+from time import sleep
 
 queue = Queue() #쓰레드간 작업 공유, 서버와 opencv 쓰레드 간의 데이터 공유
 dis_queue = Queue() # 거리 계산 쓰레드와 opencv 쓰레드 사이 대기 큐
@@ -157,10 +158,11 @@ def calculate_distance():
             else: # 땅이 아닌 부분
                 print("땅이 아닙니다.")
 
-def client_send():
+#거리 전송하는 쓰레드
+def client_send_distance():
     HOST = '192.168.1.165'
     # 서버 주소, 라즈베리파이 IP 입력
-    PORT = 5521
+    PORT = 5522
     # 클라이언트 접속 대기 포트 번호
 
     #소켓 생성
@@ -172,11 +174,8 @@ def client_send():
     
 
     while True:
-        #메시지를 전송합니다
+        
         my_str = queue.get()
-        user_command = my_str
-
-        client_socket.sendall(user_command.encode())
 
         if user_command == 'break':
             print("연결 종료")
@@ -203,15 +202,49 @@ def client_send():
         print("Received ", repr(data.decode()))
         # https://shoark7.github.io/programming/python/difference-between-__repr__-vs-__str__
 
+#메세지 전송하는 쓰레드
+def client_send_message():
+    HOST = '192.168.1.165'
+    # 서버 주소, 라즈베리파이 IP 입력
+    PORT = 5521
+    # 클라이언트 접속 대기 포트 번호
+
+    #소켓 생성
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
+    #지정한 HOST와 PORT로 연결
+    client_socket.connect((HOST, PORT))
+    
+
+    while True:
+        #메시지를 전송합니다
+        my_str = queue.get()
+        user_command = my_str
+
+        client_socket.sendall(user_command.encode())
+
+        if user_command == 'break':
+            print("연결 종료")
+            break
+
+        #메시지 수신
+
+        data = client_socket.recv(1024)
+        print("Received ", repr(data.decode()))
+        # https://shoark7.github.io/programming/python/difference-between-__repr__-vs-__str__
+
         
             
 
 
 #쓰레드 열기
-t_socket = threading.Thread(target=client_send)
+t_socket = threading.Thread(target=client_send_message)
+t_dissock = threading.Thread(target=client_send_distance)
 t_imgShow = threading.Thread(target=opencv_img)
 t_distance = threading.Thread(target=calculate_distance)
 t_socket.start()
+t_dissock.start()
 t_imgShow.start()
 t_distance.start()
 
@@ -219,6 +252,7 @@ k = cv2.waitKey(1) & 0xFF
 if k == 27:    # ESC 키 눌러졌을 경우 종료
     print("ESC 키 눌러짐")
     t_socket.close()
+    t_dissock.close()
     t_imgShow.close()
     t_distance.close()
 
