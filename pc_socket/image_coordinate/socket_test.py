@@ -6,10 +6,15 @@ import RPi.GPIO as GPIO
 import time
 import socket
 import threading
+from queue import Queue
+
 
 os.system("sudo pigpiod") # pigpio on
 time.sleep(1)
 pi = pigpio.pi() # Connect to local Pi.
+
+#클라이언트로부터 받은 값을 다른 쓰레드로 이동할 queue
+queue = Queue()
 
 # 모터 상태
 STOP  = 0
@@ -36,10 +41,10 @@ ENA = 26  #37 pin
 ENB = 0   #27 pin
 
 #GPIO PIN
-IN1 = 13  #37 pin
-IN2 = 19  #35 pin
-IN3 = 5   #31 pin
-IN4 = 6   #29 pin
+IN1 = 19  #37 pin
+IN2 = 13  #35 pin
+IN3 = 6   #31 pin
+IN4 = 5   #29 pin
 
 # 핀 설정 함수
 def setPinConfig(EN, INA, INB):
@@ -49,14 +54,16 @@ def setPinConfig(EN, INA, INB):
     GPIO.setup(INB, GPIO.OUT)
     # 100khz 로 PWM 동작 시킴 
     pwm = GPIO.PWM(EN, 100) 
-    # 우선 PWM 멈춤.   
+    
+    # 우선 PWM 멈춤. 
+    # duty 0으로 시작. 
     pwm.start(0) 
     return pwm
 
 # 모터 제어 함수
 def setMotorContorl(pwm, INA, INB, speed, stat):
 
-    #모터 속도 제어 PWM
+    #PWM duty 값 입력받기, 우리는 100%로 활용할 예정
     pwm.ChangeDutyCycle(speed)  
     
     #앞으로
@@ -72,20 +79,20 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
     #왼쪽으로
     elif stat == LEFT:
         if pwm == pwmA:
-            GPIO.output(INA, LOW)
-            GPIO.output(INB, HIGH)
-        else:
             GPIO.output(INA, HIGH)
             GPIO.output(INB, LOW)
+        else:
+            GPIO.output(INA, LOW)
+            GPIO.output(INB, HIGH)
 
     #오른쪽으로
     elif stat == RIGHT:
         if pwm == pwmA:
-            GPIO.output(INA, HIGH)
-            GPIO.output(INB, LOW)
-        else:
             GPIO.output(INA, LOW)
             GPIO.output(INB, HIGH)
+        else:
+            GPIO.output(INA, HIGH)
+            GPIO.output(INB, LOW)
         
     #정지
     elif stat == STOP:
@@ -142,8 +149,30 @@ def wavesensor():
         wave_distance = distance
 
         print("Distance => ", wave_distance, "cm")
+
+def motor_move():
+    while True:
+        direction = queue.get() # 방향 정보를 받는다.
+        #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다.
+        x = queue.get()
+        y = queue.get()
+
+        if direction == "C":
         
-def server_bind_message():
+        elif direction == "L":
+            setMotor(CH1, 100, LEFT)
+            setMotor(CH2, 100, LEFT)
+
+        elif direction == "R":
+            setMotor(CH1, 100, RIGHT)
+            setMotor(CH2, 100, RIGHT)
+
+        else:
+            break
+
+
+
+def server_bind():
 
     HOST = '192.168.1.165'
     # 서버 주소, 라즈베리파이 IP 입력
@@ -179,85 +208,10 @@ def server_bind_message():
         #클라이언트 보낸 메시지를 수신하기 위해 대기합니다.
         data = client_socket.recv(1024)
 
-        #빈 문자열을 수신하면 루프를 중지합니다.
-        if not data:
-            break
-
-        # data.decode() type = str
-        #수신받은 문자열을 출력합니다.
-        print("Received from ", addr, data.decode())
-
-        #받은 문자열을 사디 클라리언트로 (에코)
-        client_socket.sendall(data)
-
-    #소켓을 닫습니다.
-    client_socket.close()
-    server_socket.close()
-
-def server_bind_distance():
-
-    HOST = '192.168.1.165'
-    # 서버 주소, 라즈베리파이 IP 입력
-    PORT = 5522
-    # 클라이언트 접속 대기 포트 번호
-
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #AF_INET : 주소 체계 IPv4 인터넷 프로토콜, SOCK_STREAM : TCP 통신
-
-    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    # setsockopt : 소켓 옵션을 정하는 함수 
-    # SOL_SOCKET : 소켓 옵션 레벨 중 하나
-    # SO_REUSEADDR : 커널이 소켓을 사용하는 중에도 계속 소켓을 사용할 수 있도록 한다.
-
-    #소켓을 특정 네트워크 인터페이스와 포트 번호에 연결.
-    server_socket.bind((HOST,PORT))
-
-    #서버가 클라이언트의 접속을 허용하도록 함.
-    server_socket.listen()
-
-    #accept 함수에서 대기하다가 클라이언트가 접속하면 새로운 소켓과 주소을 리턴
-    client_socket, addr = server_socket.accept()
-
-    #클라이언트의 주소 리턴
-    print("Connected by ",addr)
-
-
-    while True:
-
-        if stop_thread == True: # 스레드가 멈추면 빠져나오기
-            break
-
-        #클라이언트 보낸 메시지를 수신하기 위해 대기합니다.
-        data = client_socket.recv(1024)
-
         str_list = data.decode().split("/")
 
-        # 왼쪽일지 오른쪽일지 결정
-        # X 좌표는 얼마만큼 돌지 결정
-        if str_list[0] == "L":
-            setMotor(CH1, 100, LEFT)
-            setMotor(CH2, 100, LEFT)
-            time.sleep(1)
-
-            setMotor(CH1, 80, STOP)
-            setMotor(CH2, 80, STOP)
-        elif str_list[0] == "R":
-            setMotor(CH1, 100, RIGHT)
-            setMotor(CH2, 100, RIGHT)
-            time.sleep(1)
-
-            setMotor(CH1, 80, STOP)
-            setMotor(CH2, 80, STOP)
-
-        # Y 좌표는 얼마만큼 움직일지 결정
-        if int(str_list[2]) > 60: 
-            if wave_distance > 10: # 앞 객체간 거리가 10 이상일 때만 움직임
-                setMotor(CH1, 100, FORWARD)
-                setMotor(CH2, 100, FORWARD)
-                time.sleep(1)
-
-                setMotor(CH1, 80, STOP)
-                setMotor(CH2, 80, STOP)
+        for i in str_list:
+            queue.get(i)
                 
         #빈 문자열을 수신하면 루프를 중지합니다.
         if not data:
@@ -267,27 +221,26 @@ def server_bind_distance():
         #수신받은 문자열을 출력합니다.
         print("Received from ", addr, data.decode())
 
-        #받은 문자열을 사디 클라리언트로 (에코)
         client_socket.sendall(data)
+
 
     #소켓을 닫습니다.
     client_socket.close()
     server_socket.close()
-
+    
 def streaming():
     os.system("cd /home/pi/gst-rtsp-0.10.8/gst-rtsp-server/examples ; ./test-launch \"( rpicamsrc preview=false bitrate=2000000 keyframe-interval=15 ! video/x-h264, width=1280, height=720, framerate=35/1 ! h264parse ! rtph264pay name=pay0 pt=96 )\"")
 
     
 t_wavesensor = threading.Thread(target=wavesensor)
-t_socket = threading.Thread(target=server_bind_message)
-t_dissoc = threading.Thread(target=server_bind_distance)
+t_socket = threading.Thread(target=server_bind)
 t_streamer = threading.Thread(target=streaming)
 
 try:
     t_wavesensor.start()
     t_socket.start()
     t_streamer.start()
-    t_dissoc.start()
+
 # 서보모터 종료
 except KeyboardInterrupt:
     os.system("sudo killall pigpiod") # pigpio off
