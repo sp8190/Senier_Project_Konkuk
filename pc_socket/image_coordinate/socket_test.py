@@ -7,6 +7,7 @@ import time
 import socket
 import threading
 from queue import Queue
+import numpy as np
 
 
 os.system("sudo pigpiod") # pigpio on
@@ -54,7 +55,7 @@ def setPinConfig(EN, INA, INB):
     GPIO.setup(INB, GPIO.OUT)
     # 100khz 로 PWM 동작 시킴 
     pwm = GPIO.PWM(EN, 100) 
-    
+
     # 우선 PWM 멈춤. 
     # duty 0으로 시작. 
     pwm.start(0) 
@@ -153,20 +154,36 @@ def wavesensor():
 def motor_move():
     while True:
         direction = queue.get() # 방향 정보를 받는다.
-        #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다.
+        #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다. , rpm 90으로 지름은 65mm -> 속력은 약 30cm/s, 90도 회전시 0.71초 필요.
         x = queue.get()
         y = queue.get()
+        inv_tan = np.arctan(y/x)
+        degree = int(inv_tan)
 
         if direction == "C":
-        
+            setMotor(CH1, 100, FORWARD)
+            setMotor(CH2, 100, FORWARD)
+
+            # 90도 회전 시 걸리는 시간 비율을 현재 이동할 각도 이동 시 시간으로 변경
+            sleep(x/30)
+
         elif direction == "L":
             setMotor(CH1, 100, LEFT)
             setMotor(CH2, 100, LEFT)
+            sleep((degree / (math.pi / 2)) * 0.71)
+
+            setMotor(CH1, 100, FORWARD)
+            setMotor(CH2, 100, FORWARD
+            sleep(x/30)
 
         elif direction == "R":
             setMotor(CH1, 100, RIGHT)
             setMotor(CH2, 100, RIGHT)
+            sleep((degree / (math.pi / 2)) * 0.71)
 
+            setMotor(CH1, 100, FORWARD)
+            setMotor(CH2, 100, FORWARD
+            sleep(x/30)
         else:
             break
 
@@ -235,12 +252,13 @@ def streaming():
 t_wavesensor = threading.Thread(target=wavesensor)
 t_socket = threading.Thread(target=server_bind)
 t_streamer = threading.Thread(target=streaming)
-
+t_move = threading.Thread(target=motor_move)
 try:
     t_wavesensor.start()
     t_socket.start()
     t_streamer.start()
-
+    t_move.start()
+    
 # 서보모터 종료
 except KeyboardInterrupt:
     os.system("sudo killall pigpiod") # pigpio off
