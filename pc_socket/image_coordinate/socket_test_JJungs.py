@@ -72,20 +72,20 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
     #왼쪽으로
     elif stat == LEFT:
         if pwm == pwmA:
-            GPIO.output(INA, HIGH)
-            GPIO.output(INB, LOW)
-        else:
             GPIO.output(INA, LOW)
             GPIO.output(INB, HIGH)
+        else:
+            GPIO.output(INA, HIGH)
+            GPIO.output(INB, LOW)
 
     #오른쪽으로
     elif stat == RIGHT:
         if pwm == pwmA:
-            GPIO.output(INA, LOW)
-            GPIO.output(INB, HIGH)
-        else:
             GPIO.output(INA, HIGH)
             GPIO.output(INB, LOW)
+        else:
+            GPIO.output(INA, LOW)
+            GPIO.output(INB, HIGH)
         
     #정지
     elif stat == STOP:
