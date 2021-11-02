@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[43]:
+# In[35]:
 
 
 
@@ -19,11 +19,14 @@ YOLO_net = cv2.dnn.readNet("yolov3-tiny.weights","yolov3-tiny.cfg")
 
 #각 사물에 해당하는 이미지(AR) 불러오기
 logo = cv2.imread('user.jpg')
+refri = cv2.imread('refri.jpg')
 size = 20
 logo = cv2.resize(logo, (size, size))
-
+refri = cv2.resize(refri,(size,size))
 img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
 ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
+img2gray_2 = cv2.cvtColor(refri, cv2.COLOR_BGR2GRAY)
+ret_refri, mask_refri = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
 
 # YOLO NETWORK 재구성
 classes = []
@@ -99,8 +102,8 @@ while True:
                     
                     #성공한 예시
                     #roi = frame[x-90:x-80,y+5:y+15] 
-                    roi = frame[y+15:y+35,x+w-480:x+w-460]
-                   
+                    #roi = frame[y+15:y+35,x+w-480:x+w-460]
+                    roi = frame[y:y+20,x-20:x]
                 # Set an index of where the mask is
                     roi[np.where(mask)] = 0
                     roi += logo
@@ -108,6 +111,19 @@ while True:
             elif label == 'refrigerator':
                 cv2.putText(frame, "store food", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
                             (0, 0, 0), 1)
+                
+                if ret_refri:
+                # Flip the frame
+                    frame = cv2.flip(frame, 1)
+ 
+                    roi_refri = frame[y:y+20,x+w+100:x+w+120]
+                    
+                    
+                # Set an index of where the mask is
+                    roi_refri[np.where(mask_refri)] = 0
+                    roi_refri += refri
+                    frame=cv2.flip(frame,1)
+                
             else:
                 cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
 
