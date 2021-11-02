@@ -8,6 +8,7 @@ import socket
 import threading
 from queue import Queue
 import numpy as np
+import math
 
 
 os.system("sudo pigpiod") # pigpio on
@@ -166,7 +167,7 @@ def motor_move():
             setMotor(CH2, 100, FORWARD)
 
             #앞으로 얼마만큼 이동할지
-            sleep(y/30)
+            time.sleep(y/30)
 
             setMotor(CH1, 80, STOP)
             setMotor(CH2, 80, STOP)
@@ -175,14 +176,14 @@ def motor_move():
             setMotor(CH1, 100, LEFT)
             setMotor(CH2, 100, LEFT)
             # 90도 회전 시 걸리는 시간 비율을 현재 이동할 각도 이동 시 시간으로 변경
-            sleep((degree / (math.pi / 2)) * 0.71)
+            time.sleep((degree / (math.pi / 2)) * 0.71)
 
             setMotor(CH1, 80, STOP)
             setMotor(CH2, 80, STOP)
 
             setMotor(CH1, 100, FORWARD)
             setMotor(CH2, 100, FORWARD)
-            sleep(y/30)
+            time.sleep(y/30)
 
             setMotor(CH1, 80, STOP)
             setMotor(CH2, 80, STOP)
@@ -190,14 +191,14 @@ def motor_move():
         elif direction == "R":
             setMotor(CH1, 100, RIGHT)
             setMotor(CH2, 100, RIGHT)
-            sleep((degree / (math.pi / 2)) * 0.71)
+            time.sleep((degree / (math.pi / 2)) * 0.71)
 
             setMotor(CH1, 80, STOP)
             setMotor(CH2, 80, STOP)
             
             setMotor(CH1, 100, FORWARD)
             setMotor(CH2, 100, FORWARD)
-            sleep(y/30)
+            time.sleep(y/30)
 
             setMotor(CH1, 80, STOP)
             setMotor(CH2, 80, STOP)
