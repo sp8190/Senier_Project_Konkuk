@@ -173,7 +173,7 @@ def motor_move():
             sleep((degree / (math.pi / 2)) * 0.71)
 
             setMotor(CH1, 100, FORWARD)
-            setMotor(CH2, 100, FORWARD
+            setMotor(CH2, 100, FORWARD)
             sleep(x/30)
 
         elif direction == "R":
@@ -182,7 +182,7 @@ def motor_move():
             sleep((degree / (math.pi / 2)) * 0.71)
 
             setMotor(CH1, 100, FORWARD)
-            setMotor(CH2, 100, FORWARD
+            setMotor(CH2, 100, FORWARD)
             sleep(x/30)
         else:
             break
@@ -258,7 +258,7 @@ try:
     t_socket.start()
     t_streamer.start()
     t_move.start()
-    
+
 # 서보모터 종료
 except KeyboardInterrupt:
     os.system("sudo killall pigpiod") # pigpio off
