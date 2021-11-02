@@ -61,100 +61,133 @@ def calculate_distance():
         if case == "opencv": # 1550 기준
             x = dis_queue.get()
             y = dis_queue.get()
-            if y <= 720 and y > 400: # y축 기준으로 나누기
-                if 0 <= x and x < 400:
-                    s_queue.put("L") # 좌로 움직이기
-                    s_queue.put(20) # 좌로 15cm
-                    s_queue.put(10) # 앞으로 15cm
+            
+            if y <= 720 and y > 600: # y축 기준으로 나누기
+                height = (720 - y) / 4 #앞으로 얼마를 갈지
 
-                elif 400 <= x and x < 800:
-                    s_queue.put("C") # 중간으로 직진
-                    s_queue.put(0) # 좌우로 0
-                    s_queue.put(10) # 앞으로 15cm
+                if 630 < x and x < 650: # 중심을 고른 경우
+                    s_queue.put("C") 
+                    s_queue.put(0)
+                    s_queue.put(int(height))
 
-                else:
-                    s_queue.put("R") # 우로 움직이기.
-                    s_queue.put(20) # 우로 15cm
-                    s_queue.put(10) # 앞으로 15cm
+                elif x < 630: #왼쪽
+                    width = 0.03 * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("L") 
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
 
-            elif y <= 400 and y > 300:
-                if 0 <= x and x < 400:
-                    s_queue.put("L") # 좌로 움직이기
-                    s_queue.put(20) # 좌로 15cm
-                    s_queue.put(40) # 앞으로 40cm
+                else: #오른쪽
+                    width = 0.03 * abs(x - 640) 
+                    s_queue.put("R")
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
 
-                elif 400 <= x and x < 800:
-                    s_queue.put("C") # 중간으로 직진
-                    s_queue.put(0) # 좌우로 0
-                    s_queue.put(40) # 앞으로 40cm
+            elif y <= 600 and y > 420:
+                height = (600 - y) / 6
 
-                else:
-                    s_queue.put("R") # 우로 움직이기.
-                    s_queue.put(20) # 우로 15cm
-                    s_queue.put(40) # 앞으로 40cm
+                if 635 < x and x < 645: # 중심을 고른 경우
+                    s_queue.put("C") 
+                    s_queue.put(0)
+                    s_queue.put(int(height))
+                    
+                elif x < 635: #왼쪽
+                    width = (30 / 730) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("L") 
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
 
-            elif y <= 300 and y > 220:           
-                if 0 <= x and x < 256:
-                    s_queue.put("L") # 좌로 움직이기
-                    s_queue.put(40) # 좌로 40cm
-                    s_queue.put(80) # 앞으로 40cm
-
-                elif 256 <= x and x < 512:
-                    s_queue.put("L") # 좌로 움직이기
-                    s_queue.put(20) # 좌로 20cm
-                    s_queue.put(80) # 앞으로 40cm
+                else: #오른쪽
+                    width = (30 / 730) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("R")
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
                 
-                elif 512 <= x and x < 768:
-                    s_queue.put("C") # 중간으로 직진
-                    s_queue.put(0) # 좌우로 0
-                    s_queue.put(80) # 앞으로 40cm
-
-                elif 768 <= x and x < 1024:
-                    s_queue.put("R") # 중간으로 직진
-                    s_queue.put(20) # 좌우로 0
-                    s_queue.put(80) # 앞으로 40cm
-
-                else:
-                    s_queue.put("R") # 우로 움직이기.
-                    s_queue.put(40) # 우로 15cm
-                    s_queue.put(80) # 앞으로 40cm
-
-            elif y <= 220 and y > 160:
-                if 0 <= x and x < 183:
-                    s_queue.put("L") # 좌로 움직이기
-                    s_queue.put(60) # 좌로 40cm
-                    s_queue.put(120) # 앞으로 40cm
-
-                elif 183 <= x and x < 366:
-                    s_queue.put("L") # 좌로 움직이기
-                    s_queue.put(40) # 좌로 20cm
-                    s_queue.put(120) # 앞으로 40cm
+            elif y <= 420 and y > 340:           
                 
-                elif 366 <= x and x < 549:
-                    s_queue.put("L") # 중간으로 직진
-                    s_queue.put(20) # 좌우로 0
-                    s_queue.put(120) # 앞으로 40cm
+                height = (420 - y) / (80 / 30)
 
-                elif 549 <= x and x < 732:
-                    s_queue.put("C") # 중간으로 직진
-                    s_queue.put(0) # 좌우로 0
-                    s_queue.put(120) # 앞으로 40cm
+                if 635 < x and x < 645: # 중심을 고른 경우
+                    s_queue.put("C") 
+                    s_queue.put(0)
+                    s_queue.put(int(height))
+                    
+                elif x < 635: #왼쪽
+                    width = (30 / 330) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("L") 
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
 
-                elif 732 <= x and x < 915:
-                    s_queue.put("R") # 중간으로 직진
-                    s_queue.put(20) # 좌우로 0
-                    s_queue.put(120) # 앞으로 40cm
+                else: #오른쪽
+                    width = (30 / 330) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("R")
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
                 
-                elif 915 <= x and x < 1098:
-                    s_queue.put("R") # 중간으로 직진
-                    s_queue.put(40) # 좌우로 0
-                    s_queue.put(120) # 앞으로 40cm
+            elif y <= 340 and y > 312:
+                
+                height = (340 - y) / (28 / 30)
 
-                else:
-                    s_queue.put("R") # 우로 움직이기.
-                    s_queue.put(60) # 우로 15cm
-                    s_queue.put(120) # 앞으로 40cm
+                if 638 < x and x < 642: # 중심을 고른 경우
+                    s_queue.put("C") 
+                    s_queue.put(0)
+                    s_queue.put(int(height))
+                    
+                elif x < 638: #왼쪽
+                    width = (30 / 200) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("L") 
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
 
+                else: #오른쪽
+                    width = (30 / 200) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("R")
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
+
+
+            elif y <= 312 and y > 290:
+                
+                height = (312 - y) / (22 / 30)
+
+                if 638 < x and x < 642: # 중심을 고른 경우
+                    s_queue.put("C") 
+                    s_queue.put(0)
+                    s_queue.put(int(height))
+                    
+                elif x < 640: #왼쪽
+                    width = (30 / 180) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("L") 
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
+
+                else: #오른쪽
+                    width = (30 / 180) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("R")
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
+
+
+            elif y <= 290 and y > 280:
+                
+                height = (290 - y) / (10 / 20)
+
+                if 638 < x and x < 642: # 중심을 고른 경우
+                    s_queue.put("C") 
+                    s_queue.put(0)
+                    s_queue.put(int(height))
+                    
+                elif x < 640: #왼쪽
+                    width = (30 / 120) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("L") 
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
+
+                else: #오른쪽
+                    width = (30 / 120) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    s_queue.put("R")
+                    s_queue.put(int(width))
+                    s_queue.put(int(height))
+                
             else: # 땅이 아닌 부분
                 print("땅이 아닙니다.")
 
