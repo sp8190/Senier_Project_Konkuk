@@ -36,10 +36,10 @@ ENA = 26  #37 pin
 ENB = 0   #27 pin
 
 #GPIO PIN
-IN1 = 19  #37 pin
-IN2 = 13  #35 pin
-IN3 = 6   #31 pin
-IN4 = 5   #29 pin
+IN1 = 13  #37 pin
+IN2 = 19  #35 pin
+IN3 = 5   #31 pin
+IN4 = 6   #29 pin
 
 # 핀 설정 함수
 def setPinConfig(EN, INA, INB):
@@ -192,7 +192,7 @@ def server_bind():
             setMotor(CH1, 80, STOP)
             setMotor(CH2, 80, STOP)
 
-            if int(str_list[2]) > 60: 
+            if int(str_list[2]) > 10: 
                 if wave_distance > 10: # 앞 객체간 거리가 10 이상일 때만 움직임
                     setMotor(CH1, 100, FORWARD)
                     setMotor(CH2, 100, FORWARD)
@@ -208,7 +208,7 @@ def server_bind():
 
             setMotor(CH1, 80, STOP)
             setMotor(CH2, 80, STOP)
-            if int(str_list[2]) > 60: 
+            if int(str_list[2]) > 10: 
                 if wave_distance > 10: # 앞 객체간 거리가 10 이상일 때만 움직임
                     setMotor(CH1, 100, FORWARD)
                     setMotor(CH2, 100, FORWARD)
