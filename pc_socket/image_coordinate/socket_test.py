@@ -157,15 +157,16 @@ def motor_move():
         #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다. , rpm 90으로 지름은 65mm -> 속력은 약 30cm/s, 90도 회전시 0.71초 필요.
         x = float(queue.get())
         y = float(queue.get())
-        inv_tan = np.arctan(y/x)
-        degree = inv_tan
+        if x != 0:
+            inv_tan = np.arctan(y/x)
+            degree = inv_tan
 
         if direction == "C":
             setMotor(CH1, 100, FORWARD)
             setMotor(CH2, 100, FORWARD)
 
             # 90도 회전 시 걸리는 시간 비율을 현재 이동할 각도 이동 시 시간으로 변경
-            sleep(x/30)
+            sleep(y/30)
 
         elif direction == "L":
             setMotor(CH1, 100, LEFT)
@@ -174,7 +175,7 @@ def motor_move():
 
             setMotor(CH1, 100, FORWARD)
             setMotor(CH2, 100, FORWARD)
-            sleep(x/30)
+            sleep(y/30)
 
         elif direction == "R":
             setMotor(CH1, 100, RIGHT)
@@ -183,7 +184,7 @@ def motor_move():
 
             setMotor(CH1, 100, FORWARD)
             setMotor(CH2, 100, FORWARD)
-            sleep(x/30)
+            sleep(y/30)
         else:
             break
 
