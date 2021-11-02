@@ -228,7 +228,7 @@ def server_bind():
         str_list = data.decode().split("/")
 
         for i in str_list:
-            queue.get(i)
+            queue.put(i)
                 
         #빈 문자열을 수신하면 루프를 중지합니다.
         if not data:
