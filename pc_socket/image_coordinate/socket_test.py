@@ -42,10 +42,10 @@ ENA = 26  #37 pin
 ENB = 0   #27 pin
 
 #GPIO PIN
-IN1 = 19  #37 pin
-IN2 = 13  #35 pin
-IN3 = 6   #31 pin
-IN4 = 5   #29 pin
+IN1 = 13  #37 pin
+IN2 = 19  #35 pin
+IN3 = 5   #31 pin
+IN4 = 6   #29 pin
 
 # 핀 설정 함수
 def setPinConfig(EN, INA, INB):
@@ -80,20 +80,20 @@ def setMotorContorl(pwm, INA, INB, speed, stat):
     #왼쪽으로
     elif stat == LEFT:
         if pwm == pwmA:
-            GPIO.output(INA, HIGH)
-            GPIO.output(INB, LOW)
-        else:
             GPIO.output(INA, LOW)
             GPIO.output(INB, HIGH)
+        else:
+            GPIO.output(INA, HIGH)
+            GPIO.output(INB, LOW)
 
     #오른쪽으로
     elif stat == RIGHT:
         if pwm == pwmA:
-            GPIO.output(INA, LOW)
-            GPIO.output(INB, HIGH)
-        else:
             GPIO.output(INA, HIGH)
             GPIO.output(INB, LOW)
+        else:
+            GPIO.output(INA, LOW)
+            GPIO.output(INB, HIGH)
         
     #정지
     elif stat == STOP:
