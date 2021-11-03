@@ -64,128 +64,128 @@ def calculate_distance():
             
             if y <= 720 and y > 600: # y축 기준으로 나누기
                 height = (720 - y) / 4 #앞으로 얼마를 갈지
-
+                
                 if 630 < x and x < 650: # 중심을 고른 경우
                     s_queue.put("C") 
                     s_queue.put(0)
                     s_queue.put(int(height))
 
-                elif x < 630: #왼쪽
-                    width = 0.03 * abs(x - 640) # 좌우로 얼마나 이동할지
+                elif x <= 630: #왼쪽
+                    width = 0.03 * abs(x - 630) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
 
-                else: #오른쪽
-                    width = 0.03 * abs(x - 640) 
+                elif x >= 650: #오른쪽
+                    width = 0.03 * abs(x - 650) 
                     s_queue.put("R")
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
 
             elif y <= 600 and y > 420:
-                height = (600 - y) / 6
+                height = (600 - y) / 6 + 30
 
                 if 635 < x and x < 645: # 중심을 고른 경우
                     s_queue.put("C") 
                     s_queue.put(0)
                     s_queue.put(int(height))
                     
-                elif x < 635: #왼쪽
-                    width = (30 / 730) * abs(x - 640) # 좌우로 얼마나 이동할지
+                elif x <= 635: #왼쪽
+                    width = (30 / 730) * abs(x - 635) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
 
-                else: #오른쪽
-                    width = (30 / 730) * abs(x - 640) # 좌우로 얼마나 이동할지
+                elif x >= 645: #오른쪽
+                    width = (30 / 730) * abs(x - 645) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
                 
             elif y <= 420 and y > 340:           
                 
-                height = (420 - y) / (80 / 30)
+                height = (420 - y) / (80 / 30) + 60
 
                 if 635 < x and x < 645: # 중심을 고른 경우
                     s_queue.put("C") 
                     s_queue.put(0)
                     s_queue.put(int(height))
                     
-                elif x < 635: #왼쪽
-                    width = (30 / 330) * abs(x - 640) # 좌우로 얼마나 이동할지
+                elif x <= 635: #왼쪽
+                    width = (30 / 330) * abs(x - 635) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
 
-                else: #오른쪽
-                    width = (30 / 330) * abs(x - 640) # 좌우로 얼마나 이동할지
+                elif x >= 645: #오른쪽
+                    width = (30 / 330) * abs(x - 645) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
                 
             elif y <= 340 and y > 312:
                 
-                height = (340 - y) / (28 / 30)
+                height = (340 - y) / (28 / 30) + 95
 
                 if 638 < x and x < 642: # 중심을 고른 경우
                     s_queue.put("C") 
                     s_queue.put(0)
                     s_queue.put(int(height))
                     
-                elif x < 638: #왼쪽
+                elif x <= 638: #왼쪽
                     width = (30 / 200) * abs(x - 640) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
 
-                else: #오른쪽
+                elif x >= 642: #오른쪽
                     width = (30 / 200) * abs(x - 640) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
 
 
             elif y <= 312 and y > 290:
                 
-                height = (312 - y) / (22 / 30)
+                height = (312 - y) / (22 / 30) + 125
 
                 if 638 < x and x < 642: # 중심을 고른 경우
                     s_queue.put("C") 
                     s_queue.put(0)
                     s_queue.put(int(height))
                     
-                elif x < 640: #왼쪽
-                    width = (30 / 180) * abs(x - 640) # 좌우로 얼마나 이동할지
+                elif x <= 638: #왼쪽
+                    width = (30 / 160) * abs(x - 640) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
 
-                else: #오른쪽
-                    width = (30 / 180) * abs(x - 640) # 좌우로 얼마나 이동할지
+                elif x >= 642: #오른쪽
+                    width = (30 / 160) * abs(x - 640) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
 
 
             elif y <= 290 and y > 280:
                 
-                height = (290 - y) / (10 / 20)
+                height = (290 - y) / (10 / 20) + 135
 
                 if 638 < x and x < 642: # 중심을 고른 경우
                     s_queue.put("C") 
                     s_queue.put(0)
                     s_queue.put(int(height))
                     
-                elif x < 640: #왼쪽
-                    width = (30 / 120) * abs(x - 640) # 좌우로 얼마나 이동할지
+                elif x <= 638: #왼쪽
+                    width = (30 / 130) * abs(x - 640) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
 
-                else: #오른쪽
-                    width = (30 / 120) * abs(x - 640) # 좌우로 얼마나 이동할지
+                elif x >= 642: #오른쪽
+                    width = (30 / 130) * abs(x - 640) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
-                    s_queue.put(int(width))
+                    s_queue.put((width))
                     s_queue.put(int(height))
                 
             else: # 땅이 아닌 부분

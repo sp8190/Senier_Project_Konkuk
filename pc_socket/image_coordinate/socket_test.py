@@ -150,7 +150,7 @@ def wavesensor():
         distance = round(distance, 2)
         wave_distance = distance
 
-        print("Distance => ", wave_distance, "cm")
+        #print("Distance => ", wave_distance, "cm")
 
 def motor_move():
     while True:
@@ -158,10 +158,14 @@ def motor_move():
         #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다. , rpm 90으로 지름은 65mm -> 속력은 약 30cm/s, 90도 회전시 0.74초 필요.
         x = float(queue.get())
         y = float(queue.get())
-        if x != 0:
+        if direction != "C":
             inv_tan = np.arctan(y/x)
             degree = inv_tan
-            t = (degree / (math.pi / 2)) * 0.74
+            if degree > math.pi / 2.5 and y > x: # 각도가 pi/2 (90도)에 수렴할 때 이상한 곳으로 이동함 -> 그래서 작은 각으로 이동하도록 변경
+                t = abs(((math.pi / 2) - degree) / (math.pi / 2)) * 0.74
+            else:
+                t = abs((degree) / (math.pi / 2)) * 0.74
+            print("{0} / {1} / {2} / {3}\n".format(x,y,degree,t))
         if direction == "C":
             setMotor(CH1, 100, FORWARD)
             setMotor(CH2, 100, FORWARD)
