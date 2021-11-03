@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[35]:
+# In[31]:
 
 
 
@@ -18,16 +18,26 @@ YOLO_net = cv2.dnn.readNet("yolov3-tiny.weights","yolov3-tiny.cfg")
 #width, height, channel = img.shape
 
 #각 사물에 해당하는 이미지(AR) 불러오기
+#1번째 이미지: person
 logo = cv2.imread('user.jpg')
+#2번째 이미지: refrigerator
 refri = cv2.imread('refri.jpg')
+#3번째 이미지: bottle
+bottle = cv2.imread('bottle.jpg')
+#이미지 크기 조절
 size = 20
 logo = cv2.resize(logo, (size, size))
 refri = cv2.resize(refri,(size,size))
+#bottle = cv2.resize(bottle,(size,size))
+
 img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
 ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
-img2gray_2 = cv2.cvtColor(refri, cv2.COLOR_BGR2GRAY)
-ret_refri, mask_refri = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
 
+img2gray_2 = cv2.cvtColor(refri, cv2.COLOR_BGR2GRAY)
+ret_2, mask_2 = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
+
+#img2gray_3 = cv2.cvtColor(bottle, cv2.COLOR_BGR2GRAY)
+#ret_3, mask_refri = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
 # YOLO NETWORK 재구성
 classes = []
 with open("coco.names", "r") as f:
@@ -79,7 +89,7 @@ while True:
             x, y, w, h = boxes[i]
             label = str(classes[class_ids[i]])
             score = confidences[i]
-            #
+
             # 경계상자와 클래스 정보 이미지에 입력
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 5)
             cv2.putText(frame, label, (x, y - 20), cv2.FONT_ITALIC, 0.5, 
@@ -93,37 +103,70 @@ while True:
                 #특정 위치에 이미지 불러오기
                  if ret:
                 # Flip the frame
-                    frame = cv2.flip(frame, 1)
+                    #frame = cv2.flip(frame, 1)
 
                 # Region of Image (ROI), where we want to insert logo
-                    #roi = frame[-size-10:-10, -size-10:-10]
-                    #roi = frame[-size-10:-10, -size-10:-10]
-                    #roi = frame[-60:-10,-60:-10]
+                # 화면 밖으로 나가는 것을 방지하기 위함(x창: 640 y창: 480)
+                    if x>620:
+                     x=620
+                    elif x<0:
+                        x=0
                     
-                    #성공한 예시
-                    #roi = frame[x-90:x-80,y+5:y+15] 
-                    #roi = frame[y+15:y+35,x+w-480:x+w-460]
-                    roi = frame[y:y+20,x-20:x]
+                    if y>460:
+                        y=460
+                    elif y<0:
+                        y=0
+                    roi = frame[y:y+20,x:x+20]
+                    
+                   
                 # Set an index of where the mask is
                     roi[np.where(mask)] = 0
                     roi += logo
-                    frame=cv2.flip(frame,1)
+                    
+                    
+                    #frame=cv2.flip(frame,1)
             elif label == 'refrigerator':
                 cv2.putText(frame, "store food", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
                             (0, 0, 0), 1)
                 
-                if ret_refri:
-                # Flip the frame
-                    frame = cv2.flip(frame, 1)
- 
-                    roi_refri = frame[y:y+20,x+w+100:x+w+120]
+                if ret_2:
+                
+                    #roi_refri = frame[y:y+20,x+w+100:x+w+120]
+                    if x>620:
+                     x=620
+                    elif x<0:
+                        x=0
                     
+                    if y>460:
+                        y=460
+                    elif y<0:
+                        y=0
+                    roi_refri = frame[y:y+20,x-20:x]
+
+                    roi_refri[np.where(mask_2)] = 0
+                    roi_refri += refri
+   
+            elif label == 'bottle':
+                cv2.putText(frame, "store drink", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
+                            (0, 0, 0), 1)
+                
+                if ret_refri:
+                    if x>620:
+                     x=620
+                    elif x<0:
+                        x=0
+                    
+                    if y>460:
+                        y=460
+                    elif y<0:
+                        y=0
+                    #roi_refri = frame[y:y+20,x+w+100:x+w+120]
+                    roi_refri = frame[y:y+20,x:x+20]
                     
                 # Set an index of where the mask is
                     roi_refri[np.where(mask_refri)] = 0
                     roi_refri += refri
-                    frame=cv2.flip(frame,1)
-                
+
             else:
                 cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
 
@@ -135,10 +178,4 @@ while True:
         break
 VideoSignal.release()
 cv2.destroyAllWindows()
-
-
-# In[ ]:
-
-
-
 
