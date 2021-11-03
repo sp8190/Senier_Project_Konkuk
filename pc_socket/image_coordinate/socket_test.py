@@ -130,7 +130,7 @@ def wavesensor():
             break
         
         GPIO.output(24, False)
-        time.sleep(0.5)
+        time.sleep(0.01)
 
         GPIO.output(24, True)
         time.sleep(0.00001)
@@ -149,6 +149,9 @@ def wavesensor():
         distance = time_interval * 17000
         distance = round(distance, 2)
         wave_distance = distance
+        if wave_distance <= 10:
+            setMotor(CH1, 100, STOP)
+            setMotor(CH2, 100, STOP)
 
         #print("Distance => ", wave_distance, "cm")
 
