@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[31]:
+# In[42]:
 
 
 
@@ -19,25 +19,25 @@ YOLO_net = cv2.dnn.readNet("yolov3-tiny.weights","yolov3-tiny.cfg")
 
 #각 사물에 해당하는 이미지(AR) 불러오기
 #1번째 이미지: person
-logo = cv2.imread('user.jpg')
+logo = cv2.imread('user.jpg') #person
 #2번째 이미지: refrigerator
-refri = cv2.imread('refri.jpg')
+refri = cv2.imread('refri.jpg') #냉장고
 #3번째 이미지: bottle
-bottle = cv2.imread('bottle.jpg')
+bottle = cv2.imread('bottle.jpg') #병
 #이미지 크기 조절
 size = 20
 logo = cv2.resize(logo, (size, size))
 refri = cv2.resize(refri,(size,size))
-#bottle = cv2.resize(bottle,(size,size))
+bottle = cv2.resize(bottle,(size,size))
 
 img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
 ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
 
 img2gray_2 = cv2.cvtColor(refri, cv2.COLOR_BGR2GRAY)
-ret_2, mask_2 = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
+ret_2, mask_2 = cv2.threshold(img2gray_2, 1, 255, cv2.THRESH_BINARY)
 
-#img2gray_3 = cv2.cvtColor(bottle, cv2.COLOR_BGR2GRAY)
-#ret_3, mask_refri = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
+img2gray_3 = cv2.cvtColor(bottle, cv2.COLOR_BGR2GRAY)
+ret_3, mask_bottle = cv2.threshold(img2gray_3, 1, 255, cv2.THRESH_BINARY)
 # YOLO NETWORK 재구성
 classes = []
 with open("coco.names", "r") as f:
@@ -150,7 +150,7 @@ while True:
                 cv2.putText(frame, "store drink", (x+w-100, y+15), cv2.FONT_ITALIC, 0.5, 
                             (0, 0, 0), 1)
                 
-                if ret_refri:
+                if ret_3:
                     if x>620:
                      x=620
                     elif x<0:
@@ -161,11 +161,11 @@ while True:
                     elif y<0:
                         y=0
                     #roi_refri = frame[y:y+20,x+w+100:x+w+120]
-                    roi_refri = frame[y:y+20,x:x+20]
+                    roi_bottle = frame[y:y+20,x:x+20]
                     
                 # Set an index of where the mask is
-                    roi_refri[np.where(mask_refri)] = 0
-                    roi_refri += refri
+                    roi_bottle[np.where(mask_bottle)] = 0
+                    roi_bottle += refri
 
             else:
                 cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
@@ -178,4 +178,10 @@ while True:
         break
 VideoSignal.release()
 cv2.destroyAllWindows()
+
+
+# In[ ]:
+
+
+
 
