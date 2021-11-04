@@ -10,11 +10,13 @@ import numpy as np
 import math
 from queue import Queue
 from time import sleep
+import time
 
 queue = Queue() #쓰레드간 작업 공유, 서버와 opencv 쓰레드 간의 데이터 공유
 dis_queue = Queue() # 거리 계산 쓰레드와 opencv 쓰레드 사이 대기 큐
 s_queue = Queue() # 거리 계산 쓰레드와 서버 쓰레드 사이의 데이터 공유
 # value_queue = Queue() # 거리 계산 시 필요한 x,y 픽셀값 공유
+
 
 def mouse_callback(event, x, y, flags, param): 
     
@@ -28,7 +30,8 @@ def mouse_callback(event, x, y, flags, param):
         dis_queue.put(y)
 
 def opencv_img():
-    
+    prev_time = 0
+    FPS = 10
     url = 'rtsp://192.168.1.243:8554/test'
     cap = cv2.VideoCapture(url)
     YOLO_net = cv2.dnn.readNet("yolov3-tiny.weights","yolov3-tiny.cfg")
@@ -188,22 +191,33 @@ def opencv_img():
                         
                     # Set an index of where the mask is
                         roi_bottle[np.where(mask_bottle)] = 0
-                        roi_bottle += bottle
+                        roi_bottle += refri
 
                 else:
                     cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
 
 
+        current_time = time.time() - prev_time
 
-        cv2.imshow('image', frame)
+        if (ret is True) and (current_time > 1./ FPS) :
+            
+            prev_time = time.time()
+            
+            cv2.imshow('image', frame)
+            
+            if cv2.waitKey(1) > 0 :
+                
+                break
 
-        k = cv2.waitKey(1) & 0xFF
-        if k == 27:    # ESC 키 눌러졌을 경우 종료
-            print("ESC 키 눌러짐")
-            my_str = "break"
-            queue.put(my_str)
-            dis_queue.put(my_str)
-            break
+            # cv2.imshow('image', frame)
+
+            k = cv2.waitKey(1) & 0xFF
+            if k == 27:    # ESC 키 눌러졌을 경우 종료
+                print("ESC 키 눌러짐")
+                my_str = "break"
+                queue.put(my_str)
+                dis_queue.put(my_str)
+                break
     cap.release()
     cv2.destroyAllWindows()
 

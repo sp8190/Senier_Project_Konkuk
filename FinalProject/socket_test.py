@@ -272,8 +272,9 @@ def server_bind():
     server_socket.close()
     
 def streaming():
-    os.system("cd /home/pi/gst-rtsp-0.10.8/gst-rtsp-server/examples ; ./test-launch \"( rpicamsrc preview=false bitrate=2000000 keyframe-interval=15 ! video/x-h264, width=1280, height=720, framerate=35/1 ! h264parse ! rtph264pay name=pay0 pt=96 )\"")
+    os.system("cd /home/pi/gst-rtsp-0.10.8/gst-rtsp-server/examples ; ./test-launch \"( rpicamsrc preview=false bitrate=2000000 keyframe-interval=15 ! video/x-h264, width=1280, height=720, framerate=8/1 ! h264parse ! rtph264pay name=pay0 pt=96 )\"")
 
+    
     
 t_wavesensor = threading.Thread(target=wavesensor)
 t_socket = threading.Thread(target=server_bind)
