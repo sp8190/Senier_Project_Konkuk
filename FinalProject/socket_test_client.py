@@ -29,7 +29,7 @@ def mouse_callback(event, x, y, flags, param):
 
 def opencv_img():
     
-    url = 'rtsp://192.168.1.165:8554/test'
+    url = 'rtsp://192.168.1.243:8554/test'
     cap = cv2.VideoCapture(url)
     YOLO_net = cv2.dnn.readNet("yolov3-tiny.weights","yolov3-tiny.cfg")
 
@@ -350,7 +350,7 @@ def calculate_distance():
                 print("땅이 아닙니다.")
 
 def client_send():
-    HOST = '192.168.1.165'
+    HOST = '192.168.1.243'
     # 서버 주소, 라즈베리파이 IP 입력
     PORT = 5521
     # 클라이언트 접속 대기 포트 번호
