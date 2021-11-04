@@ -7,12 +7,16 @@
 
 import cv2
 import numpy as np
+import time
 
 # 웹캠 신호 받기
 VideoSignal = cv2.VideoCapture(0)
 # YOLO 가중치 파일과 CFG 파일 로드
 YOLO_net = cv2.dnn.readNet("yolov3-tiny.weights","yolov3-tiny.cfg")
 
+#FPS 지정
+prev_time = 0
+FPS = 10
 
 #roi = img[100:600, 200:400]
 #width, height, channel = img.shape
@@ -49,6 +53,9 @@ while True:
     # 웹캠 프레임
     ret, frame = VideoSignal.read()
     h, w, c = frame.shape
+
+    #FPS 지정할 변수
+    current_time = time.time() - prev_time
 
     # YOLO 입력
     blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0, 0, 0),
@@ -171,8 +178,11 @@ while True:
                 cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
 
 
-
-    cv2.imshow("YOLOv3", frame)
+    if (ret is True) and (current_time > 1./ FPS) :
+    	
+        prev_time = time.time()
+        
+        cv2.imshow("YOLOv3", frame)
 
     if cv2.waitKey(1) == ord('q'): 
         break
