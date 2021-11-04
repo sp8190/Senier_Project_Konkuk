@@ -188,7 +188,7 @@ def opencv_img():
                         
                     # Set an index of where the mask is
                         roi_bottle[np.where(mask_bottle)] = 0
-                        roi_bottle += refri
+                        roi_bottle += bottle
 
                 else:
                     cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
