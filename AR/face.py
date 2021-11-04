@@ -41,7 +41,7 @@ img2gray_2 = cv2.cvtColor(refri, cv2.COLOR_BGR2GRAY)
 ret_2, mask_2 = cv2.threshold(img2gray_2, 1, 255, cv2.THRESH_BINARY)
 
 img2gray_3 = cv2.cvtColor(bottle, cv2.COLOR_BGR2GRAY)
-ret_3, mask_bottle = cv2.threshold(img2gray_3, 1, 255, cv2.THRESH_BINARY)
+ret_3, mask_3 = cv2.threshold(img2gray_3, 1, 255, cv2.THRESH_BINARY)
 # YOLO NETWORK 재구성
 classes = []
 with open("coco.names", "r") as f:
@@ -171,8 +171,8 @@ while True:
                     roi_bottle = frame[y:y+20,x:x+20]
                     
                 # Set an index of where the mask is
-                    roi_bottle[np.where(mask_bottle)] = 0
-                    roi_bottle += refri
+                    roi_bottle[np.where(mask_3)] = 0
+                    roi_bottle += bottle
 
             else:
                 cv2.circle(frame, (x+w-10,y+10), 5, (0,0,255), -1)
