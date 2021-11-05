@@ -74,7 +74,7 @@ def opencv_img():
 
     while(True):
         ret, frame = cap.read()    # Read 결과와 frame
-        h, w, c = frame.shape
+        height, width, channels = frame.shape
 
         # YOLO 입력
         blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0, 0, 0),
@@ -96,10 +96,10 @@ def opencv_img():
 
                 if confidence > 0.5:
                     # Object detected
-                    center_x = int(detection[0] * w)
-                    center_y = int(detection[1] * h)
-                    dw = int(detection[2] * w)
-                    dh = int(detection[3] * h)
+                    center_x = int(detection[0] * width)
+                    center_y = int(detection[1] * height)
+                    dw = int(detection[2] * width)
+                    dh = int(detection[3] * height)
                     # Rectangle coordinate
                     x = int(center_x - dw / 2)
                     y = int(center_y - dh / 2)
