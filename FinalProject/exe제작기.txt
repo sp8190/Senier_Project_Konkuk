@@ -1,0 +1,14 @@
+pip install pyinstaller
+conda ``로 설치함
+
+pyinstaller --onefile -n Test.exe --icon=user.ico --noconsole face.py
+
+*attributeError: module 'win32ctypes.~~~'has no attribute 'error'가 떴을 경우
+기입한 icon의 확장자가 jpg 또는 png로 되어있을 경우이므로 확장자를 ico로 바꿔준 뒤 진행한다.
+
+*unicodeDecodeError 떴을 경우 UTF-8의 문제이므로 설치위치\Lib\site-pakages\Pyinstaller\compat.py
+에서 out= out.decode(encoding)파트를 out= out.decode('latin-1')로 변경한뒤 시도한다.
+
+*OsError : Errno 22의 경우 저장경로에 들어가서는 안된 문자가 들어간 것이다. 혹은 tensorboard를 down
+grade해주면 된다고 함. ->https://icoconvert.com/ 에서 jpg파일을 convert해주자
+
