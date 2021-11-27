@@ -158,6 +158,16 @@ def wavesensor():
 def motor_move():
     while True:
         direction = queue.get() # 방향 정보를 받는다.
+        if direction == "Back":
+            setMotor(CH1, 100, BACKWORD)
+            setMotor(CH2, 100, BACKWORD)
+
+            #앞으로 얼마만큼 이동할지
+            time.sleep(1)
+
+            setMotor(CH1, 80, STOP)
+            setMotor(CH2, 80, STOP)
+            continue
         #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다. , rpm 90으로 지름은 65mm -> 속력은 약 30cm/s, 90도 회전시 0.74초 필요.
         x = float(queue.get())
         y = float(queue.get())

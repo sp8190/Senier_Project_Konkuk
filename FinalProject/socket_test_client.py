@@ -19,8 +19,13 @@ s_queue = Queue() # 거리 계산 쓰레드와 서버 쓰레드 사이의 데이
 
 
 def mouse_callback(event, x, y, flags, param): 
+
+    if event == cv2.EVENT_RBUTTONDOWN:
+
+        my_str = "Back"
+        queue.put(my_str)
     
-    if event == cv2.EVENT_LBUTTONDOWN:
+    elif event == cv2.EVENT_LBUTTONDOWN:
         
         my_str = str(x)+"/"+str(y)
         print(my_str) # 이벤트 발생한 마우스 위치 출력
@@ -387,6 +392,12 @@ def client_send():
         if user_command == 'break':
             print("연결 종료")
             break
+
+        elif user_command == 'Back':
+            client_socket.sendall('Back'.encode())
+            data = client_socket.recv(1024)
+            print("Received ", repr(data.decode()))
+            continue
 
         #메시지를 전송합니다 거리 계산에서 나온 거리 값
         direction =s_queue.get() # 방향전달
