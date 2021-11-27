@@ -12,3 +12,27 @@ pyinstaller --onefile -n Test.exe --icon=user.ico --noconsole face.py
 *OsError : Errno 22의 경우 저장경로에 들어가서는 안된 문자가 들어간 것이다. 혹은 tensorboard를 down
 grade해주면 된다고 함. ->https://icoconvert.com/ 에서 jpg파일을 convert해주자
 
+
+2번째
+python -m pip install cx_freeze
+
+setup.py에서 
+##########################
+import sys
+
+from cx_Freeze import setup, Executable
+
+
+
+setup(  name = "test",
+
+        version = "1.0",
+
+        description = "test",
+
+        author = "sh1n2",
+
+        executables = [Executable("face.py")])   
+##################################
+코드 작성
+python setup.py build로 build 파일 생성
