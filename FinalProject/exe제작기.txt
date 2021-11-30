@@ -13,26 +13,8 @@ pyinstaller --onefile -n Test.exe --icon=user.ico --noconsole face.py
 grade해주면 된다고 함. ->https://icoconvert.com/ 에서 jpg파일을 convert해주자
 
 
-2번째
-python -m pip install cx_freeze
+참고: https://0ver-grow.tistory.com/1104
 
-setup.py에서 
-##########################
-import sys
+-오류 확인법: prompt에서 exe파일 위치로 가서 실행하기
 
-from cx_Freeze import setup, Executable
-
-
-
-setup(  name = "test",
-
-        version = "1.0",
-
-        description = "test",
-
-        author = "sh1n2",
-
-        executables = [Executable("face.py")])   
-##################################
-코드 작성
-python setup.py build로 build 파일 생성
+* mkl_intel_thread.1.dll관련 오류가 뜰 경우 https://0ver-grow.tistory.com/1105 방법 실행
