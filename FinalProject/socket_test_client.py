@@ -34,6 +34,20 @@ def mouse_callback(event, x, y, flags, param):
         dis_queue.put(x)
         dis_queue.put(y)
 
+    elif event == cv2.EVENT_MOUSEWHEEL:
+        if flags > 0:
+            my_str = "Up"
+            queue.put(my_str)
+        else:
+            my_str = "Down"
+            queue.put(my_str)
+
+    elif event == cv2.EVENT_MBUTTONDOWN:
+        my_str = "Center"
+        queue.put(my_str)
+
+
+
 def opencv_img():
     prev_time = 0
     FPS = 10
@@ -366,7 +380,7 @@ def calculate_distance():
                     s_queue.put(int(height))
                 
             else: # 땅이 아닌 부분
-                #print("땅이 아닙니다.")
+                print("땅이 아닙니다.")
 
 def client_send():
     HOST = '192.168.1.243'

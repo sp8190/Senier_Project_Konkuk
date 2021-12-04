@@ -18,6 +18,10 @@ pi = pigpio.pi() # Connect to local Pi.
 #클라이언트로부터 받은 값을 다른 쓰레드로 이동할 queue
 queue = Queue()
 
+#카메라 위치를 설정하는 변수
+camera_position = 3
+camera_y = 1500 #pigpiod 값
+
 # 모터 상태
 STOP  = 0
 FORWARD  = 1
@@ -158,6 +162,7 @@ def wavesensor():
 def motor_move():
     while True:
         direction = queue.get() # 방향 정보를 받는다.
+        #뒤로 이동
         if direction == "Back":
             setMotor(CH1, 100, BACKWORD)
             setMotor(CH2, 100, BACKWORD)
@@ -168,6 +173,21 @@ def motor_move():
             setMotor(CH1, 80, STOP)
             setMotor(CH2, 80, STOP)
             continue
+        #카메라 이동
+        elif direction == "Up":
+            if camera_position < 5:
+                camera_y = camera_y + 200 #얼마만큼 각도를 올리는지
+                camera_position = camera_position + 1 #카메라 위치 정도
+                pi.set_servo_pulsewidth(14, camera_y) #카메라 이동
+        elif direction == "Down":
+            if camera_position > 0:
+                camera_y = camera_y - 200
+                camera_position = camera_position - 1
+                pi.set_servo_pulsewidth(14, camera_y)
+        elif direction == "Center":
+            camera_position = 3
+            camera_y = 1500
+            pi.set_servo_pulsewidth(14, camera_y)
         #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다. , rpm 90으로 지름은 65mm -> 속력은 약 30cm/s, 90도 회전시 0.74초 필요.
         x = float(queue.get())
         y = float(queue.get())
