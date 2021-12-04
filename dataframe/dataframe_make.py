@@ -26,7 +26,8 @@ distance_data = pd.DataFrame(
         'x_phase 4 right': ['', '', '642', '', ''],
         'x_phase 5 right': ['', '', '642', '', ''],
         'x_phase 6 right': ['', '', '642', '', ''],
-
+        'phase is 30cm': ['', '', '', '', ''],
+ 
 })
 
 distance_data.to_excel("my_test.xlsx")
