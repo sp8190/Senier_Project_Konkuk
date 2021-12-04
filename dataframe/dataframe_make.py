@@ -8,17 +8,25 @@ import threading
 distance_data = pd.DataFrame(
     {
         'camera': ['lowest', 'lower', 'middle', 'higher', 'highest'],
-        'y_phase 1': ['', '', '', '', ''],
-        'y_phase 2': ['', '', '', '', ''],
-        'y_phase 3': ['', '', '', '', ''],
-        'y_phase 4': ['', '', '', '', ''],
-        'y_phase 5': ['', '', '', '', ''],
-        'x_phase 1': ['', '', '', '', ''],
-        'x_phase 2': ['', '', '', '', ''],
-        'x_phase 3': ['', '', '', '', ''],
-        'x_phase 4': ['', '', '', '', ''],
-        'x_phase 5': ['', '', '', '', ''],
-        
+        'y_phase 1': ['', '', '600', '', ''],
+        'y_phase 2': ['', '', '420', '', ''],
+        'y_phase 3': ['', '', '340', '', ''],
+        'y_phase 4': ['', '', '312', '', ''],
+        'y_phase 5': ['', '', '290', '', ''],
+        'y_phase 6': ['', '', '280', '', ''],
+        'x_phase 1 left': ['', '', '630', '', ''],
+        'x_phase 2 left': ['', '', '635', '', ''],
+        'x_phase 3 left': ['', '', '635', '', ''],
+        'x_phase 4 left': ['', '', '638', '', ''],
+        'x_phase 5 left': ['', '', '638', '', ''],
+        'x_phase 6 left': ['', '', '638', '', ''],
+        'x_phase 1 right': ['', '', '650', '', ''],
+        'x_phase 2 right': ['', '', '645', '', ''],
+        'x_phase 3 right': ['', '', '645', '', ''],
+        'x_phase 4 right': ['', '', '642', '', ''],
+        'x_phase 5 right': ['', '', '642', '', ''],
+        'x_phase 6 right': ['', '', '642', '', ''],
+
 })
 
 distance_data.to_excel("my_test.xlsx")
