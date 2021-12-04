@@ -85,7 +85,7 @@ def opencv_img():
     with open("coco.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
     layer_names = YOLO_net.getLayerNames()
-    output_layers = [layer_names[i[0] - 1] for i in YOLO_net.getUnconnectedOutLayers()]
+    output_layers = [layer_names[i - 1] for i in YOLO_net.getUnconnectedOutLayers()]
 
     
     cv2.namedWindow('image')  #마우스 이벤트 영역 윈도우 생성
@@ -409,6 +409,24 @@ def client_send():
 
         elif user_command == 'Back':
             client_socket.sendall('Back'.encode())
+            data = client_socket.recv(1024)
+            print("Received ", repr(data.decode()))
+            continue
+
+        elif user_command == 'Up':
+            client_socket.sendall('Up'.encode())
+            data = client_socket.recv(1024)
+            print("Received ", repr(data.decode()))
+            continue
+
+        elif user_command == 'Down':
+            client_socket.sendall('Down'.encode())
+            data = client_socket.recv(1024)
+            print("Received ", repr(data.decode()))
+            continue
+
+        elif user_command == 'Center':
+            client_socket.sendall('Center'.encode())
             data = client_socket.recv(1024)
             print("Received ", repr(data.decode()))
             continue
