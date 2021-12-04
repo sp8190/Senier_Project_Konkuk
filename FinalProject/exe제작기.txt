@@ -18,3 +18,4 @@ grade해주면 된다고 함. ->https://icoconvert.com/ 에서 jpg파일을 conv
 -오류 확인법: prompt에서 exe파일 위치로 가서 실행하기
 
 * mkl_intel_thread.1.dll관련 오류가 뜰 경우 https://0ver-grow.tistory.com/1105 방법 실행
+pyinstaller --upx-dir C:\Users\tim96\Desktop\upx-3.96 --onedir socket_test.py
