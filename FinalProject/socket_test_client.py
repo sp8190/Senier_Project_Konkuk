@@ -366,7 +366,7 @@ def calculate_distance():
                     s_queue.put(int(height))
                 
             else: # 땅이 아닌 부분
-                print("땅이 아닙니다.")
+                #print("땅이 아닙니다.")
 
 def client_send():
     HOST = '192.168.1.243'
