@@ -251,7 +251,7 @@ def calculate_distance():
         if case == "break":
             break
         degree = 2 #카메라 각도 정보, 기본 설정은 중간 단계
-        index = -1 #카메라 각도 정보에 따라 불러오는 데이터의 index
+        index = 2 #카메라 각도 정보에 따라 불러오는 데이터의 index
         if case == "server": # 라즈베리파이로부터 서보모터의 각도 값을 받아올 경우 사용
             degree = camera_queue.get()
             if(degree = 0): # 제일 낮은 단계
@@ -278,13 +278,13 @@ def calculate_distance():
                     s_queue.put(int(height))
 
                 elif x <= df['x_phase 1 left'][index]: #왼쪽
-                    width = 0.03 * abs(x - df['x_phase 1 left'][index]) # 좌우로 얼마나 이동할지
+                    width = (30 / df['x_phase 1'][index]) * abs(x - df['x_phase 1 left'][index]) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
                     s_queue.put((width))
                     s_queue.put(int(height))
 
                 elif x >= df['x_phase 1 right'][index]: #오른쪽
-                    width = 0.03 * abs(x - df['x_phase 1 right'][index]) 
+                    width = (30 / df['x_phase 1'][index]) * abs(x - df['x_phase 1 right'][index]) 
                     s_queue.put("R")
                     s_queue.put((width))
                     s_queue.put(int(height))
@@ -298,13 +298,13 @@ def calculate_distance():
                     s_queue.put(int(height))
                     
                 elif x <= df['x_phase 2 left'][index]: #왼쪽
-                    width = (30 / 730) * abs(x - 635) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 2'][index]) * abs(x - df['x_phase 2 left'][index]) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
                     s_queue.put((width))
                     s_queue.put(int(height))
 
                 elif x >= df['x_phase 2 right'][index]: #오른쪽
-                    width = (30 / 730) * abs(x - 645) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 2'][index]) * abs(x - df['x_phase 2 right'][index]) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
                     s_queue.put((width))
                     s_queue.put(int(height))
@@ -319,13 +319,13 @@ def calculate_distance():
                     s_queue.put(int(height))
                     
                 elif x <= df['x_phase 3 left'][index]: #왼쪽
-                    width = (30 / 330) * abs(x - 635) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 3'][index]) * abs(x - df['x_phase 3 left'][index]) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
                     s_queue.put((width))
                     s_queue.put(int(height))
 
                 elif x >= df['x_phase 3 right'][index]: #오른쪽
-                    width = (30 / 330) * abs(x - 645) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 3'][index]) * abs(x - df['x_phase 3 right'][index]) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
                     s_queue.put((width))
                     s_queue.put(int(height))
@@ -340,13 +340,13 @@ def calculate_distance():
                     s_queue.put(int(height))
                     
                 elif x <= df['x_phase 4 left'][index]: #왼쪽
-                    width = (30 / 200) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 4'][index]) * abs(x - (1280 / 2)) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
                     s_queue.put((width))
                     s_queue.put(int(height))
 
                 elif x >= df['x_phase 4 right'][index]: #오른쪽
-                    width = (30 / 200) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 4'][index]) * abs(x - (1280 / 2)) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
                     s_queue.put((width))
                     s_queue.put(int(height))
@@ -362,13 +362,13 @@ def calculate_distance():
                     s_queue.put(int(height))
                     
                 elif x <= df['x_phase 5 left'][index]: #왼쪽
-                    width = (30 / 160) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 5'][index]) * abs(x - (1280 / 2)) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
                     s_queue.put((width))
                     s_queue.put(int(height))
 
                 elif x >= df['x_phase 5 right'][index]: #오른쪽
-                    width = (30 / 160) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 5'][index]) * abs(x - (1280 / 2)) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
                     s_queue.put((width))
                     s_queue.put(int(height))
@@ -384,19 +384,19 @@ def calculate_distance():
                     s_queue.put(int(height))
                     
                 elif x <= df['x_phase 6 left'][index]: #왼쪽
-                    width = (30 / 130) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 6'][index]) * abs(x - (1280 / 2)) # 좌우로 얼마나 이동할지
                     s_queue.put("L") 
                     s_queue.put((width))
                     s_queue.put(int(height))
 
                 elif x >= df['x_phase 6 right'][index]: #오른쪽
-                    width = (30 / 130) * abs(x - 640) # 좌우로 얼마나 이동할지
+                    width =  (30 / df['x_phase 6'][index]) * abs(x - (1280 / 2)) # 좌우로 얼마나 이동할지
                     s_queue.put("R")
                     s_queue.put((width))
                     s_queue.put(int(height))
                 
-            else: # 땅이 아닌 부분
-                print("땅이 아닙니다.")
+            else: # 일정 부분 이상은 못움직이도록, 무한대로 발산할 가능성이 있음.
+                print("더 아래를 클릭해주세요.\n")
 
 def client_send():
     HOST = '192.168.1.243'
@@ -462,10 +462,11 @@ def client_send():
         print(go)
         client_socket.sendall(str(go).encode())
 
-        #메시지 수신
+        #카메라 각도 수신
 
         data = client_socket.recv(1024)
-        print("Received ", repr(data.decode()))
+        #print("Received ", repr(data.decode()))
+        camera_queue.put(int(data))
         # https://shoark7.github.io/programming/python/difference-between-__repr__-vs-__str__
 
         

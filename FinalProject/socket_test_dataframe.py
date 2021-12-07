@@ -17,6 +17,7 @@ pi = pigpio.pi() # Connect to local Pi.
 
 #클라이언트로부터 받은 값을 다른 쓰레드로 이동할 queue
 queue = Queue()
+camera_queue = Queue()
 
 # 모터 상태
 STOP  = 0
@@ -157,7 +158,7 @@ def wavesensor():
 
 def motor_move():
     #카메라 위치를 설정하는 변수
-    camera_position = 3
+    camera_position = 2
     camera_y = 1500 #pigpiod 값
     while True:
         direction = queue.get() # 방향 정보를 받는다.
@@ -181,18 +182,21 @@ def motor_move():
                 time.sleep(0.5) 
             continue
         elif direction == "Down":
-            if camera_position > 0:
+            if camera_position > -1:
                 camera_y = camera_y - 200
                 camera_position = camera_position - 1
                 pi.set_servo_pulsewidth(14, camera_y)
                 time.sleep(0.5) 
             continue
         elif direction == "Center":
-            camera_position = 3
+            camera_position = 2
             camera_y = 1500
             pi.set_servo_pulsewidth(14, camera_y)
             time.sleep(0.5) 
             continue
+
+        camera_queue.put(camera_position) # client에게 전송할 카메라 각도 정보 입력
+
         #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다. , rpm 90으로 지름은 65mm -> 속력은 약 30cm/s, 90도 회전시 0.74초 필요.
         x = float(queue.get())
         y = float(queue.get())
@@ -282,6 +286,12 @@ def server_bind():
 
         if stop_thread == True: # 스레드가 멈추면 빠져나오기
             break
+        
+        elif user_command == 'Back':
+            client_socket.sendall('Back'.encode())
+            data = client_socket.recv(1024)
+            print("Received ", repr(data.decode()))
+            continue
 
         #클라이언트 보낸 메시지를 수신하기 위해 대기합니다.
         data = client_socket.recv(1024)
@@ -294,12 +304,14 @@ def server_bind():
         #빈 문자열을 수신하면 루프를 중지합니다.
         if not data:
             break
-
+        
+        degree = str(camera_queue.get())
+        
         # data.decode() type = str
         #수신받은 문자열을 출력합니다.
         print("Received from ", addr, data.decode())
 
-        client_socket.sendall(data)
+        client_socket.sendall(degree)
 
 
     #소켓을 닫습니다.

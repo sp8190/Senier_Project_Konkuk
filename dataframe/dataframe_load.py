@@ -7,15 +7,15 @@ df = pd.read_excel('my_test.xlsx')
 
 degree = "lowest"
 
-if(degree = "lowest"):
+if degree == "lowest":
     index = 0
-elif(degree = "lower"):
+elif degree == "lower":
     index = 1
-elif(degree = "middle"):
+elif degree == "middle":
     index = 2
-elif(degree = "higher"):
+elif degree == "higher":
     index = 3
-elif(degree = "highest"):
+elif degree == "highest":
     index = 4
 
 print(df['y_phase 1'][2])
