@@ -431,7 +431,7 @@ def client_send():
         elif user_command == 'Back':
             direction =s_queue.get()
             go_w =s_queue.get() # 가로로 얼마 갈지 전달
-            temp =s_queue.get()# 앞으로 얼마갈지 전달
+            go_h =s_queue.get()# 앞으로 얼마갈지 전달
             go = direction + "/" + str(go_w) + "/" + str(go_h)
             print(go)
             client_socket.sendall(str(go).encode())

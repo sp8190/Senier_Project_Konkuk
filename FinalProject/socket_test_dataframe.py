@@ -175,7 +175,7 @@ def motor_move():
             print("\n")
             print(y_trash)
             time.sleep(1)
-
+            camera_queue.put(camera_position) # client에게 전송할 카메라 각도 정보 입력
             setMotor(CH1, 80, STOP)
             setMotor(CH2, 80, STOP)
             continue
@@ -311,7 +311,7 @@ def server_bind():
         for i in str_list:
             
             queue.put(i)
-            print(i)
+            
                 
         #빈 문자열을 수신하면 루프를 중지합니다.
         if not data:
