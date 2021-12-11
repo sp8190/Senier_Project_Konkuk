@@ -197,7 +197,7 @@ def motor_move():
             time.sleep(0.5)
             camera_queue.put(camera_position) # client에게 전송할 카메라 각도 정보 입력
             continue
-        else
+        else:
             camera_queue.put(camera_position)
         
 

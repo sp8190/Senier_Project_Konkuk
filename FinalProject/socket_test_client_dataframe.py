@@ -5,7 +5,7 @@ import sys
 import subprocess
 import os
 from datetime import datetime
-import cv2 as cv2
+import cv2 
 import numpy as np
 import math
 from queue import Queue
@@ -19,7 +19,7 @@ dis_queue = Queue() # 거리 계산 쓰레드와 opencv 쓰레드 사이 대기 
 s_queue = Queue() # 거리 계산 쓰레드와 서버 쓰레드 사이의 데이터 공유
 camera_queue = Queue() # 소켓통신 쓰레드로부터 카메라 각도 정보를 받아오는 큐
 # value_queue = Queue() # 거리 계산 시 필요한 x,y 픽셀값 공유
-df = pd.read_excel('my_test.xlsx') #거리 데이터 정보 데이터프레임 생성
+df = pd.read_excel('C:\senior_project\Senior_Project_Konkuk\my_test.xlsx') #거리 데이터 정보 데이터프레임 생성
 
 
 def mouse_callback(event, x, y, flags, param): 
@@ -256,15 +256,15 @@ def calculate_distance():
        
         if iteration > 0: # 라즈베리파이로부터 서보모터의 각도 값을 받아올 경우 사용
             camera = camera_queue.get()
-            if(degree = 0): # 제일 낮은 단계
+            if(camera == 0): # 제일 낮은 단계
                 index = 0
-            elif(degree = 1): # 2번째로 낮은 단계
+            elif(camera == 1): # 2번째로 낮은 단계
                 index = 1
-            elif(degree = 2): # 중간 단계
+            elif(camera == 2): # 중간 단계
                 index = 2
-            elif(degree = 3): # 2번째로 높은 단계
+            elif(camera == 3): # 2번째로 높은 단계
                 index = 3
-            elif(degree = 4): # 제일 높은 단계
+            elif(camera == 4): # 제일 높은 단계
                 index = 4
 
         if case == "opencv": 
@@ -312,10 +312,9 @@ def calculate_distance():
                     s_queue.put(int(height))
                 
             elif y <= df['y_phase 2'][index] and y > df['y_phase 3'][index]:           
-                
-                height = ((df['y_phase 2'][index] - y) * 30) / ((df['y_phase 2'][index] - df['y_phase 3'][index]) + 60
+                height = ((df['y_phase 2'][index] - y) * 30) / (df['y_phase 2'][index] - df['y_phase 3'][index]) + 60
 
-                if df['x_phase 3 left'][index] < x and x < df['x_phase 3 right'][index]:# 중심을 고른 경우
+                if df['x_phase 3 left'][index] < x and x < df['x_phase 3 right'][index]: # 중심을 고른 경우
                     s_queue.put("C") 
                     s_queue.put(0)
                     s_queue.put(int(height))
@@ -334,7 +333,7 @@ def calculate_distance():
                 
             elif y <= df['y_phase 3'][index] and y > df['y_phase 4'][index]:
                 
-                height = ((df['y_phase 3'][index] - y) * 30) / ((df['y_phase 3'][index] - df['y_phase 4'][index]) + 95
+                height = ((df['y_phase 3'][index] - y) * 30) / (df['y_phase 3'][index] - df['y_phase 4'][index]) + 95
 
                 if  df['x_phase 4 left'][index] < x and x < df['x_phase 4 right'][index]: # 중심을 고른 경우
                     s_queue.put("C") 
@@ -356,7 +355,7 @@ def calculate_distance():
 
             elif y <= df['y_phase 4'][index] and y > df['y_phase 5'][index]:
                 
-                height =(df['y_phase 4'][index] - y) * 30) / ((df['y_phase 4'][index] - df['y_phase 5'][index]) + 125
+                height =((df['y_phase 4'][index] - y) * 30) / (df['y_phase 4'][index] - df['y_phase 5'][index]) + 125
 
                 if df['x_phase 5 left'][index] < x and x < df['x_phase 5 right'][index]: # 중심을 고른 경우
                     s_queue.put("C") 
@@ -378,7 +377,7 @@ def calculate_distance():
 
             elif y <= df['y_phase 5'][index] and y > df['y_phase 5'][index]:
                 
-                height = (df['y_phase 5'][index] - y) * 20) / ((df['y_phase 5'][index] - df['y_phase 6'][index]) + 135
+                height = ((df['y_phase 5'][index] - y) * 20) / (df['y_phase 5'][index] - df['y_phase 6'][index]) + 135
 
                 if df['x_phase 6 left'][index] < x and x < df['x_phase 6 right'][index]: # 중심을 고른 경우
                     s_queue.put("C") 
