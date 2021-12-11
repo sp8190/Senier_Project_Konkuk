@@ -467,6 +467,7 @@ def client_send():
         #카메라 각도 수신
 
         data = client_socket.recv(1024)
+        
         #print("Received ", repr(data.decode()))
         camera_queue.put(int(data))
         # https://shoark7.github.io/programming/python/difference-between-__repr__-vs-__str__

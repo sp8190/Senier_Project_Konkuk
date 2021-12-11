@@ -176,19 +176,23 @@ def motor_move():
         #카메라 이동
         elif direction == "Up":
             if camera_position < 5:
-                camera_y = camera_y + 200 #얼마만큼 각도를 올리는지
+                camera_y = camera_y + 100 #얼마만큼 각도를 올리는지
                 camera_position = camera_position + 1 #카메라 위치 정도
                 pi.set_servo_pulsewidth(14, camera_y) #카메라 이동
                 time.sleep(0.5) 
                 camera_queue.put(camera_position) # client에게 전송할 카메라 각도 정보 입력
+            else:
+                camera_queue.put(camera_position)
             continue
         elif direction == "Down":
             if camera_position > -1:
-                camera_y = camera_y - 200
+                camera_y = camera_y - 100
                 camera_position = camera_position - 1
                 pi.set_servo_pulsewidth(14, camera_y)
                 time.sleep(0.5)
                 camera_queue.put(camera_position) # client에게 전송할 카메라 각도 정보 입력 
+            else:
+                camera_queue.put(camera_position)
             continue
         elif direction == "Center":
             camera_position = 2
@@ -197,8 +201,7 @@ def motor_move():
             time.sleep(0.5)
             camera_queue.put(camera_position) # client에게 전송할 카메라 각도 정보 입력
             continue
-        else:
-            camera_queue.put(camera_position)
+        
         
 
         #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다. , rpm 90으로 지름은 65mm -> 속력은 약 30cm/s, 90도 회전시 0.74초 필요.
