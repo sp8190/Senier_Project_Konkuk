@@ -28,7 +28,9 @@ def mouse_callback(event, x, y, flags, param):
 
         my_str = "Back"
         queue.put(my_str)
-    
+        s_queue.put("B")
+        s_queue.put((-1)
+        s_queue.put(-1)
     elif event == cv2.EVENT_LBUTTONDOWN:
         
         my_str = str(x)+"/"+str(y)
@@ -428,38 +430,39 @@ def client_send():
 
         elif user_command == 'Back':
             client_socket.sendall('Back'.encode())
-            data = client_socket.recv(1024)
-            print("Received ", repr(data.decode()))
+        
             continue
 
         elif user_command == 'Up':
             client_socket.sendall('Up'.encode())
-            data = client_socket.recv(1024)
-            print("Received ", repr(data.decode()))
+            
+            
             continue
 
         elif user_command == 'Down':
             client_socket.sendall('Down'.encode())
-            data = client_socket.recv(1024)
-            print("Received ", repr(data.decode()))
+            
+            
             continue
 
         elif user_command == 'Center':
             client_socket.sendall('Center'.encode())
-            data = client_socket.recv(1024)
-            print("Received ", repr(data.decode()))
+            
+
             continue
 
         #메시지를 전송합니다 거리 계산에서 나온 거리 값
         direction =s_queue.get() # 방향전달
         
-
-        go_w =s_queue.get() # 가로로 얼마 갈지 전달
-      
-
-        temp =s_queue.get()# 앞으로 얼마갈지 전달
-        go_h = int(temp)
+        if direction != "B":
+            go_w =s_queue.get() # 가로로 얼마 갈지 전달
+            temp =s_queue.get()# 앞으로 얼마갈지 전달
+            go_h = int(temp)
         
+        else:
+            go_w =s_queue.get() # 가로로 얼마 갈지 전달
+            temp =s_queue.get()# 앞으로 얼마갈지 전달
+            go_h = int(temp)
 
         go = direction + "/" + str(go_w) + "/" + str(go_h)
         print(go)
