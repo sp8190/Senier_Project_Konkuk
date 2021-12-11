@@ -163,10 +163,11 @@ def motor_move():
     while True:
         direction = queue.get() # 방향 정보를 받는다.
         #뒤로 이동
-        if direction == "Back":
+        if direction == "B":
             setMotor(CH1, 100, BACKWORD)
             setMotor(CH2, 100, BACKWORD)
-
+            x_trash = queue.get()
+            y_trash = queue.get()
             #앞으로 얼마만큼 이동할지
             time.sleep(1)
 
@@ -303,6 +304,7 @@ def server_bind():
         str_list = data.decode().split("/")
 
         for i in str_list:
+            
             queue.put(i)
                 
         #빈 문자열을 수신하면 루프를 중지합니다.

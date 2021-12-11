@@ -429,8 +429,12 @@ def client_send():
             break
 
         elif user_command == 'Back':
-            client_socket.sendall('Back'.encode())
-        
+            direction =s_queue.get()
+            go_w =s_queue.get() # 가로로 얼마 갈지 전달
+            temp =s_queue.get()# 앞으로 얼마갈지 전달
+            go = direction + "/" + str(go_w) + "/" + str(go_h)
+            print(go)
+            client_socket.sendall(str(go).encode())
             continue
 
         elif user_command == 'Up':
@@ -458,11 +462,7 @@ def client_send():
             go_w =s_queue.get() # 가로로 얼마 갈지 전달
             temp =s_queue.get()# 앞으로 얼마갈지 전달
             go_h = int(temp)
-        
-        else:
-            go_w =s_queue.get() # 가로로 얼마 갈지 전달
-            temp =s_queue.get()# 앞으로 얼마갈지 전달
-            go_h = int(temp)
+            
 
         go = direction + "/" + str(go_w) + "/" + str(go_h)
         print(go)
