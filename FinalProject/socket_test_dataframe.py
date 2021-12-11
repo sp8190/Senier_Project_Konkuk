@@ -169,6 +169,11 @@ def motor_move():
             x_trash = queue.get()
             y_trash = queue.get()
             #앞으로 얼마만큼 이동할지
+            print(direction)
+            print("\n")
+            print(x_trash)
+            print("\n")
+            print(y_trash)
             time.sleep(1)
 
             setMotor(CH1, 80, STOP)
@@ -306,6 +311,7 @@ def server_bind():
         for i in str_list:
             
             queue.put(i)
+            print(i)
                 
         #빈 문자열을 수신하면 루프를 중지합니다.
         if not data:
