@@ -40,10 +40,10 @@ def mouse_callback(event, x, y, flags, param):
 
     elif event == cv2.EVENT_MOUSEWHEEL:
         if flags > 0:
-            my_str = "Up"
+            my_str = "Down"
             queue.put(my_str)
         else:
-            my_str = "Down"
+            my_str = "Up"
             queue.put(my_str)
 
     elif event == cv2.EVENT_MBUTTONDOWN:
@@ -246,14 +246,16 @@ def opencv_img():
 
     
 def calculate_distance():
+    iteration = 0
     while(True):
         case = dis_queue.get()
         if case == "break":
             break
         degree = 2 #카메라 각도 정보, 기본 설정은 중간 단계
         index = 2 #카메라 각도 정보에 따라 불러오는 데이터의 index
-        if case == "server": # 라즈베리파이로부터 서보모터의 각도 값을 받아올 경우 사용
-            degree = camera_queue.get()
+       
+        if iteration > 0: # 라즈베리파이로부터 서보모터의 각도 값을 받아올 경우 사용
+            camera = camera_queue.get()
             if(degree = 0): # 제일 낮은 단계
                 index = 0
             elif(degree = 1): # 2번째로 낮은 단계
@@ -265,7 +267,7 @@ def calculate_distance():
             elif(degree = 4): # 제일 높은 단계
                 index = 4
 
-        if case == "opencv": # 1550 기준
+        if case == "opencv": 
             x = dis_queue.get()
             y = dis_queue.get()
             
@@ -397,6 +399,7 @@ def calculate_distance():
                 
             else: # 일정 부분 이상은 못움직이도록, 무한대로 발산할 가능성이 있음.
                 print("더 아래를 클릭해주세요.\n")
+        iteration = iteration + 1
 
 def client_send():
     HOST = '192.168.1.243'

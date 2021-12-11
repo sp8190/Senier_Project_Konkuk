@@ -36,10 +36,10 @@ def mouse_callback(event, x, y, flags, param):
 
     elif event == cv2.EVENT_MOUSEWHEEL:
         if flags > 0:
-            my_str = "Up"
+            my_str = "Down"
             queue.put(my_str)
         else:
-            my_str = "Down"
+            my_str = "Up"
             queue.put(my_str)
 
     elif event == cv2.EVENT_MBUTTONDOWN:
