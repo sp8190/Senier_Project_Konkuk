@@ -159,7 +159,7 @@ def wavesensor():
 def motor_move():
     #카메라 위치를 설정하는 변수
     camera_position = 2
-    camera_y = 1500 #pigpiod 값
+    camera_y = 1550 #pigpiod 값
     while True:
         direction = queue.get() # 방향 정보를 받는다.
         #뒤로 이동
@@ -201,7 +201,8 @@ def motor_move():
             time.sleep(0.5)
             camera_queue.put(camera_position) # client에게 전송할 카메라 각도 정보 입력
             continue
-        
+        else:
+            camera_queue.put(camera_position)
         
 
         #x는 가로 길이, y는 세로 길이 -> 삼각형을 그려서 이동할 거리 및 이동체의 각도를 계산한다. , rpm 90으로 지름은 65mm -> 속력은 약 30cm/s, 90도 회전시 0.74초 필요.

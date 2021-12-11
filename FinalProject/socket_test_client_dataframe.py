@@ -248,6 +248,7 @@ def opencv_img():
 def calculate_distance():
     iteration = 0
     while(True):
+        print("sex")
         case = dis_queue.get()
         if case == "break":
             break
