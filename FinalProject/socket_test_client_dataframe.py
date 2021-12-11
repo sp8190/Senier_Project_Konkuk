@@ -29,8 +29,8 @@ def mouse_callback(event, x, y, flags, param):
         my_str = "Back"
         queue.put(my_str)
         s_queue.put("B")
-        s_queue.put(-1)
-        s_queue.put(-1)
+        s_queue.put(-100)
+        s_queue.put(-101)
     elif event == cv2.EVENT_LBUTTONDOWN:
         
         my_str = str(x)+"/"+str(y)
