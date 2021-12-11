@@ -314,7 +314,7 @@ def server_bind():
         #수신받은 문자열을 출력합니다.
         print("Received from ", addr, data.decode())
 
-        client_socket.sendall(degree)
+        client_socket.sendall(degree.encode())
 
 
     #소켓을 닫습니다.
