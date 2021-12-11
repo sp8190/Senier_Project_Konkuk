@@ -291,11 +291,7 @@ def server_bind():
         if stop_thread == True: # 스레드가 멈추면 빠져나오기
             break
         
-        elif user_command == 'Back':
-            client_socket.sendall('Back'.encode())
-            data = client_socket.recv(1024)
-            print("Received ", repr(data.decode()))
-            continue
+    
 
         #클라이언트 보낸 메시지를 수신하기 위해 대기합니다.
         data = client_socket.recv(1024)
