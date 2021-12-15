@@ -314,7 +314,7 @@ def calculate_distance():
                     s_queue.put((width))
                     s_queue.put(int(height))
                 
-            elif y <= df['y_phase 2'][index] and y > df['y_phase 3'][index]:           
+            elif y <= df['y_phase 2'][index] and y > df['y_phase 3'][index]:         
                 height = ((df['y_phase 2'][index] - y) * 30) / (df['y_phase 2'][index] - df['y_phase 3'][index]) + 60
 
                 if df['x_phase 3 left'][index] < x and x < df['x_phase 3 right'][index]: # 중심을 고른 경우
@@ -336,6 +336,7 @@ def calculate_distance():
                 
             elif y <= df['y_phase 3'][index] and y > df['y_phase 4'][index]:
                 
+
                 height = ((df['y_phase 3'][index] - y) * 30) / (df['y_phase 3'][index] - df['y_phase 4'][index]) + 95
 
                 if  df['x_phase 4 left'][index] < x and x < df['x_phase 4 right'][index]: # 중심을 고른 경우
@@ -356,8 +357,12 @@ def calculate_distance():
                     s_queue.put(int(height))
 
 
-            elif y <= df['y_phase 4'][index] and y > df['y_phase 5'][index]:
-                
+            elif y <= df['y_phase 4'][index] and y > df['y_phase 5'][index] or df['y_phase 5'][index] == -1:
+
+                if(df['y_phase 5'][index] != -1):
+                    print("더 아래를 클릭해주세요.\n")
+                    continue
+
                 height =((df['y_phase 4'][index] - y) * 30) / (df['y_phase 4'][index] - df['y_phase 5'][index]) + 125
 
                 if df['x_phase 5 left'][index] < x and x < df['x_phase 5 right'][index]: # 중심을 고른 경우
@@ -378,8 +383,12 @@ def calculate_distance():
                     s_queue.put(int(height))
 
 
-            elif y <= df['y_phase 5'][index] and y > df['y_phase 5'][index]:
+            elif y <= df['y_phase 5'][index] and y > df['y_phase 6'][index] or df['y_phase 6'][index] == -1:
                 
+                if(df['y_phase 6'][index] != -1):
+                    print("더 아래를 클릭해주세요.\n")
+                    continue
+
                 height = ((df['y_phase 5'][index] - y) * 20) / (df['y_phase 5'][index] - df['y_phase 6'][index]) + 135
 
                 if df['x_phase 6 left'][index] < x and x < df['x_phase 6 right'][index]: # 중심을 고른 경우
