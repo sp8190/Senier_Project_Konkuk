@@ -19,7 +19,7 @@ dis_queue = Queue() # 거리 계산 쓰레드와 opencv 쓰레드 사이 대기 
 s_queue = Queue() # 거리 계산 쓰레드와 서버 쓰레드 사이의 데이터 공유
 camera_queue = Queue() # 소켓통신 쓰레드로부터 카메라 각도 정보를 받아오는 큐
 # value_queue = Queue() # 거리 계산 시 필요한 x,y 픽셀값 공유
-df = pd.read_excel('C:\senior_project\Senior_Project_Konkuk\my_test.xlsx') #거리 데이터 정보 데이터프레임 생성
+df = pd.read_excel('C:\senior_project\Senior_Project_Konkuk\distance.xlsx') #거리 데이터 정보 데이터프레임 생성
 
 
 def mouse_callback(event, x, y, flags, param): 
