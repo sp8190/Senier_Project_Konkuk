@@ -3,6 +3,8 @@ conda ``로 설치함
 
 pyinstaller --onefile -n Test.exe --icon=user.ico --noconsole face.py
 
+모듈 추가: pyinstaller -F excel_test.py --hidden-import=queue 이런 방식으로 추가 가능
+
 *attributeError: module 'win32ctypes.~~~'has no attribute 'error'가 떴을 경우
 기입한 icon의 확장자가 jpg 또는 png로 되어있을 경우이므로 확장자를 ico로 바꿔준 뒤 진행한다.
 
